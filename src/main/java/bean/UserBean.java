@@ -336,6 +336,15 @@ public boolean findOtherUserByUsername(String username) {
             userDao.persist(userEntity1);
         }
     }
+
+    public List <User> getUserBySearch (String name) {
+        List<UserEntity> entity = userDao.searchUsersByUsername(name);
+        List <User> dto = new ArrayList<>();
+        for (UserEntity entity1 : entity) {
+            dto.add(convertToDto(entity1));
+        }
+        return dto;
+    }
 }
 
 

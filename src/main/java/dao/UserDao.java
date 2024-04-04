@@ -6,6 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Stateless
 public class UserDao extends AbstractDao<UserEntity>{
     @PersistenceContext
@@ -35,7 +38,17 @@ public class UserDao extends AbstractDao<UserEntity>{
     public void updateToken(UserEntity userEntity) {
         em.createNamedQuery("User.updateToken").setParameter("token", userEntity.getToken()).setParameter("username",userEntity.getName()).executeUpdate();
     }
+
+
     public void updateUser(UserEntity userEntity) {
         em.merge(userEntity);
+    }
+
+    public List<UserEntity> searchUsersByUsername(String searchTerm) {
+        try {
+            return em.createNamedQuery("User.searchUser").setParameter("searchTerm", searchTerm).getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
     }
 }
