@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.hibernate.query.sqm.function.SelfRenderingOrderedSetAggregateFunctionSqlAstExpression;
@@ -36,7 +37,7 @@ public class UserService {
         if (!user) {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
-            List<UserEntity> users = userBean.getUsers();
+                List<UserEntity> users = userBean.getUsers();
             return Response.status(200).entity(users).build();
         }
     }
@@ -234,12 +235,14 @@ public class UserService {
     @GET
     @Path("/search/{user}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response searchUser(@HeaderParam("token") String token, @PathParam("user") String name) {
         boolean authorized = userBean.isUserAuthorized(token);
         if (!authorized) {
             return Response.status(403).entity("Forbidden").build();
         } else {
-            List <User> searchResult = userBean.getUserBySearch(name);
+            List <UserDto> searchResult = userBean.getUserBySearch(name);
+
            return Response.status(200).entity(searchResult).build();
         }
     }

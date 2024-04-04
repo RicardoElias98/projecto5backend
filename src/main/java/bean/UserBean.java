@@ -337,11 +337,11 @@ public boolean findOtherUserByUsername(String username) {
         }
     }
 
-    public List <User> getUserBySearch (String name) {
+    public List <UserDto> getUserBySearch (String name) {
         List<UserEntity> entity = userDao.searchUsersByUsername(name);
-        List <User> dto = new ArrayList<>();
+        List <UserDto> dto = new ArrayList<>();
         for (UserEntity entity1 : entity) {
-            dto.add(convertToDto(entity1));
+            dto.add(convertUsertoUserDto(convertToDto(entity1)));
         }
         return dto;
     }
