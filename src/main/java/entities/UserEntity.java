@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 import jakarta.persistence.*;
 @Entity
@@ -30,6 +31,12 @@ public class UserEntity implements Serializable{
     String role;
     @Column (name="active", nullable = false, unique = false)
     boolean active;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "receptor")
+    private List<MensageEntity> msgs;
+
+
     public String getUsername() {
         return username;
     }
@@ -96,6 +103,14 @@ public class UserEntity implements Serializable{
     }
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<MensageEntity> getMsgs() {
+        return msgs;
+    }
+
+    public void setMsgs(List<MensageEntity> msgs) {
+        this.msgs = msgs;
     }
 }
 
