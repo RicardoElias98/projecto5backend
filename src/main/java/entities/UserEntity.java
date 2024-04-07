@@ -112,5 +112,8 @@ public class UserEntity implements Serializable{
     public void setMsgs(List<MensageEntity> msgs) {
         this.msgs = msgs;
     }
+
+
+
 }
 
