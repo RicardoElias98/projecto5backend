@@ -13,14 +13,14 @@ public class MensageEntity implements Serializable {
     @Column(name="id", nullable = false, unique = true, updatable = false)
     private int id;
 
-    @Column(name="text", nullable = true, unique = false, updatable = false)
+    @Column(name="text", nullable = false, unique = false, updatable = false)
     private String text;
 
     @Column(name = "message_datetime", nullable = false, unique = false, updatable = false)
     private LocalDateTime messageDateTime;
 
     @ManyToOne
-    @JoinColumn(name = "receptor", nullable = false, unique = true, updatable = false)
+    @JoinColumn(name = "receptor", nullable = false, unique = false, updatable = false)
     private UserEntity receptor;
 
 
