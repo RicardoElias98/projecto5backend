@@ -7,6 +7,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.List;
+
 @Stateless
 public class MensageDao extends AbstractDao<MensageEntity> {
 
@@ -21,6 +23,13 @@ public class MensageDao extends AbstractDao<MensageEntity> {
     public MensageEntity createMsg(MensageEntity msg) {
         em.persist(msg);
         return msg;
+    }
+
+    public List<MensageEntity> findMsgBySenderAndReceptor(UserEntity sender, UserEntity receptor) {
+        return em.createNamedQuery("Mensage.findMsgBySenderAndReceptor", MensageEntity.class)
+                .setParameter("sender", sender)
+                .setParameter("receptor", receptor)
+                .getResultList();
     }
 
 

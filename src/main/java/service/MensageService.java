@@ -6,15 +6,13 @@ import dto.Mensage;
 import dto.User;
 import entities.UserEntity;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Path("/msg")
 public class MensageService {
@@ -47,5 +45,24 @@ public class MensageService {
             return Response.status(201).entity("A new msg is created").build();
         }
     }
+
+    @GET
+    @Path("/tradedMsgs")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response tradedMsgs(@HeaderParam("token") String token, @HeaderParam("sender") String sender, @HeaderParam("receptor") String receptor){
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else  {
+            User senderDto = userBean.getUserByUsername(sender);
+            UserEntity senderEntity = userBean.convertToEntity(senderDto);
+            User receptorDto = userBean.getUserByUsername(receptor);
+            UserEntity receptorEntity = userBean.convertToEntity(receptorDto);
+            List<Mensage> msgs = mensageBean.getTradedMsgs(senderEntity, receptorEntity);
+            return Response.status(200).entity(msgs).build();
+        }
+    }
+
 
 }

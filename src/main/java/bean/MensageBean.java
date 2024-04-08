@@ -3,12 +3,16 @@ package bean;
 import dao.MensageDao;
 import dao.UserDao;
 import dto.Mensage;
+import dto.User;
 import entities.MensageEntity;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Singleton
 public class MensageBean {
 
@@ -41,6 +45,16 @@ public class MensageBean {
         dto.setText(entity.getText());
         dto.setMessageDateTime(entity.getMessageDateTime());
         dto.setReceptor(entity.getReceptor().getUsername());
+        dto.setSender(entity.getSender().getUsername());
         return dto;
+    }
+
+    public List<Mensage> getTradedMsgs (UserEntity sender, UserEntity receptor) {
+        List <Mensage> msgs = new ArrayList<>();
+        List <MensageEntity> msgsEntity= mensageDao.findMsgBySenderAndReceptor(sender, receptor);
+        for (MensageEntity m : msgsEntity) {
+            msgs.add(convertMsgToDto(m));
+        }
+        return msgs;
     }
 }
