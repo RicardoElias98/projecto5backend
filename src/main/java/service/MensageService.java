@@ -36,10 +36,14 @@ public class MensageService {
         } else  {
            String receptorUsername = msg.getReceptor();
            String mensage = msg.getText();
+           String senderUsername = msg.getSender();
            LocalDateTime time = msg.getMessageDateTime();
             User userdto = userBean.getUserByUsername(receptorUsername);
             UserEntity userEntity = userBean.convertToEntity(userdto);
-            mensageBean.createMensage(mensage,userEntity, time);
+            User senderDto = userBean.getUserByUsername(senderUsername);
+            UserEntity senderEntity = userBean.convertToEntity(senderDto);
+
+            mensageBean.createMensage(mensage,userEntity, time, senderEntity);
             return Response.status(201).entity("A new msg is created").build();
         }
     }

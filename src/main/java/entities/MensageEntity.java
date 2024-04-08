@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="Mensage")
+@NamedQuery(name = "Mensage.findMsgBySenderAndReceptor", query = "SELECT m FROM MensageEntity m WHERE m.sender = :sender AND m.receptor = :receptor"
+)
 public class MensageEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +21,33 @@ public class MensageEntity implements Serializable {
     @Column(name = "message_datetime", nullable = false, unique = false, updatable = false)
     private LocalDateTime messageDateTime;
 
+    @Column(name = "checked", nullable = false, unique = false, updatable = true)
+    private boolean checked;
+
     @ManyToOne
     @JoinColumn(name = "receptor", nullable = false, unique = false, updatable = false)
     private UserEntity receptor;
 
+    @ManyToOne
+    @JoinColumn(name = "sender", nullable = false, unique = false, updatable = false)
+    private UserEntity sender;
+
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public UserEntity getSender() {
+        return sender;
+    }
+
+    public void setSender(UserEntity sender) {
+        this.sender = sender;
+    }
 
     public UserEntity getReceptor() {
         return receptor;

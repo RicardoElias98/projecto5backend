@@ -17,16 +17,30 @@ public class Mensage {
 
     private String receptor;
 
+    private String sender;
+
+    private boolean checked = false;
+
     public Mensage () {
 
     }
+
+    @XmlElement
+    public boolean isChecked() {
+        return checked;
+    }
+
+
 
     @XmlElement
     public String getReceptor() {
         return receptor;
     }
 
-
+    @XmlElement
+    public String getSender() {
+        return sender;
+    }
 
     @XmlElement
     public int getId() {
@@ -55,5 +69,13 @@ public class Mensage {
 
     public void setReceptor(String receptor) {
         this.receptor = receptor;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

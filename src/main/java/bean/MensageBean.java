@@ -25,12 +25,13 @@ public class MensageBean {
         this.mensageDao = mensageDao;
     }
 
-    public Mensage createMensage (String text, UserEntity receptor, LocalDateTime time) {
+    public Mensage createMensage (String text, UserEntity receptor, LocalDateTime time, UserEntity senderEntity) {
         MensageEntity msgEntity = new MensageEntity();
         System.out.println("1" + time);
         msgEntity.setText(text);
         msgEntity.setMessageDateTime(time);
         msgEntity.setReceptor(receptor);
+        msgEntity.setSender(senderEntity);
         MensageEntity msgFinal = mensageDao.createMsg(msgEntity);
         return convertMsgToDto(msgFinal);
     }
