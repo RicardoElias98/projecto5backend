@@ -5,11 +5,14 @@ import bean.UserBean;
 import dto.Mensage;
 import dto.User;
 import entities.UserEntity;
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import websocket.WebSocketMessages;
 
+import javax.naming.NamingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,10 +26,13 @@ public class MensageService {
     @Inject
     UserBean userBean;
 
+    @EJB
+    WebSocketMessages webSocketMessages;
+
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createMsg(@HeaderParam("token") String token, Mensage msg) {
+    public Response createMsg(@HeaderParam("token") String token, Mensage msg) throws NamingException {
         boolean user = userBean.tokenExists(token);
 
         if (!user) {
@@ -42,6 +48,7 @@ public class MensageService {
             UserEntity senderEntity = userBean.convertToEntity(senderDto);
 
             mensageBean.createMensage(mensage,userEntity, time, senderEntity);
+            webSocketMessages.toDoOnMessage(msg.getText());
             return Response.status(201).entity("A new msg is created").build();
         }
     }

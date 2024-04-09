@@ -1,16 +1,24 @@
 package websocket;
 
+import bean.UserBean;
+import dto.Mensage;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.IOException;
 import java.util.HashMap;
 
 @Singleton
-@ServerEndpoint("/websocket/notifier/{token}")
-public class Notifier {
+@ServerEndpoint("/message/{token}")
+public class WebSocketMessages {
+
+    private UserBean userbean;
+
     HashMap<String, Session> sessions = new HashMap<String, Session>();
 
     public void send(String token, String msg) {
@@ -41,10 +49,16 @@ public class Notifier {
     }
 
     @OnMessage
-    public void toDoOnMessage(Session session, String msg) {
+    public void toDoOnMessage(String msg) throws NamingException {
+        InitialContext ctx = new InitialContext();
+        userbean = (UserBean) ctx.lookup("java:module/UserBean");
+
+        String usernameReceptor= "Ricardoelias98";
+        String token = userbean.getUserByUsername(usernameReceptor).getToken();
+        Session receiverSession = sessions.get(token);
         System.out.println("A new message is received: " + msg);
         try {
-            session.getBasicRemote().sendText("ack");
+            receiverSession.getBasicRemote().sendText("...");
         } catch (IOException e) {
             System.out.println("Something went wrong!");
         }
