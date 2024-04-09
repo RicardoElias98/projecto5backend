@@ -58,4 +58,14 @@ public class MensageBean {
         }
         return msgs;
     }
+
+    public void updateChecked (int msgId, boolean checked) {
+        MensageEntity msgEntity = mensageDao.find(msgId);
+        System.out.println(msgEntity);
+        System.out.println(msgEntity.getText());
+        System.out.println(msgEntity.isChecked());
+        System.out.println(checked);
+        msgEntity.setChecked(checked);
+        mensageDao.persist(msgEntity);
+    }
 }

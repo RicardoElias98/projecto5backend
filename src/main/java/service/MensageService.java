@@ -77,5 +77,20 @@ public class MensageService {
         }
     }
 
+    @PUT
+    @Path("/udpateChecked/{checked}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateChecked(@HeaderParam("token") String token, @HeaderParam("msgId") int msgId ,@PathParam("checked")  Boolean checked) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else  {
+            mensageBean.updateChecked(msgId,checked);
+            return Response.status(200).entity("Msg is checked").build();
+        }
+    }
+
+
 
 }
