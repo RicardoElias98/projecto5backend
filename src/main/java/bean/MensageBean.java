@@ -46,6 +46,7 @@ public class MensageBean {
         dto.setMessageDateTime(entity.getMessageDateTime());
         dto.setReceptor(entity.getReceptor().getUsername());
         dto.setSender(entity.getSender().getUsername());
+        dto.setId(entity.getId());
         return dto;
     }
 
