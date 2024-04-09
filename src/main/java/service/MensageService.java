@@ -73,6 +73,9 @@ public class MensageService {
             User receptorDto = userBean.getUserByUsername(receptor);
             UserEntity receptorEntity = userBean.convertToEntity(receptorDto);
             List<Mensage> msgs = mensageBean.getTradedMsgs(senderEntity, receptorEntity);
+            for (Mensage dto : msgs) {
+                System.out.println(dto.isChecked());
+            }
             return Response.status(200).entity(msgs).build();
         }
     }
