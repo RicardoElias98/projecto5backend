@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="Mensage")
-@NamedQuery(name = "Mensage.findMsgBySenderAndReceptor", query = "SELECT m FROM MensageEntity m WHERE m.sender = :sender AND m.receptor = :receptor")
+@NamedQuery(name = "Mensage.findMsgBySenderAndReceptor",  query = "SELECT m FROM MensageEntity m WHERE (m.sender = :sender AND m.receptor = :receptor) OR (m.sender = :receptor AND m.receptor = :sender)")
 public class MensageEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
