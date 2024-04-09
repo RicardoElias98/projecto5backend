@@ -1,16 +1,20 @@
 package websocket;
 
 import bean.UserBean;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.Mensage;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import utilities.LocalDateTimeAdapter;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Singleton
@@ -52,13 +56,16 @@ public class WebSocketMessages {
     public void toDoOnMessage(String msg) throws NamingException {
         InitialContext ctx = new InitialContext();
         userbean = (UserBean) ctx.lookup("java:module/UserBean");
-
-        String usernameReceptor= "Ricardoelias98";
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
+        Mensage msgAgain = gson.fromJson(msg, Mensage.class);
+        String usernameReceptor= msgAgain.getReceptor();
         String token = userbean.getUserByUsername(usernameReceptor).getToken();
         Session receiverSession = sessions.get(token);
-        System.out.println("A new message is received: " + msg);
+        System.out.println("A new message is received: " + msgAgain.getText());
         try {
-            receiverSession.getBasicRemote().sendText("...");
+            receiverSession.getBasicRemote().sendText(msgAgain.getText());
         } catch (IOException e) {
             System.out.println("Something went wrong!");
         }

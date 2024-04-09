@@ -2,6 +2,8 @@ package service;
 
 import bean.MensageBean;
 import bean.UserBean;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.Mensage;
 import dto.User;
 import entities.UserEntity;
@@ -10,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utilities.LocalDateTimeAdapter;
 import websocket.WebSocketMessages;
 
 import javax.naming.NamingException;
@@ -46,9 +49,12 @@ public class MensageService {
             UserEntity userEntity = userBean.convertToEntity(userdto);
             User senderDto = userBean.getUserByUsername(senderUsername);
             UserEntity senderEntity = userBean.convertToEntity(senderDto);
-
             mensageBean.createMensage(mensage,userEntity, time, senderEntity);
-            webSocketMessages.toDoOnMessage(msg.getText());
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                    .create();
+            String jsonMsg = gson.toJson(msg);
+            webSocketMessages.toDoOnMessage(jsonMsg);
             return Response.status(201).entity("A new msg is created").build();
         }
     }
