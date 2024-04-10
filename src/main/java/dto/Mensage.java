@@ -19,7 +19,7 @@ public class Mensage {
 
     private String sender;
 
-    private boolean checked = false;
+    private boolean checked;
 
     public Mensage () {
 

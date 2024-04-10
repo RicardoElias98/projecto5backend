@@ -36,6 +36,7 @@ public class MensageBean {
         msgEntity.setMessageDateTime(time);
         msgEntity.setReceptor(receptor);
         msgEntity.setSender(senderEntity);
+        msgEntity.setChecked(false);
         MensageEntity msgFinal = mensageDao.createMsg(msgEntity);
         return convertMsgToDto(msgFinal);
     }
@@ -47,6 +48,7 @@ public class MensageBean {
         dto.setReceptor(entity.getReceptor().getUsername());
         dto.setSender(entity.getSender().getUsername());
         dto.setId(entity.getId());
+        dto.setChecked(entity.isChecked());
         return dto;
     }
 
