@@ -41,10 +41,11 @@ public class MensageService {
         if (!user) {
             return Response.status(403).entity("User with this token is not found").build();
         } else  {
-           String receptorUsername = msg.getReceptor();
-           String mensage = msg.getText();
-           String senderUsername = msg.getSender();
-           LocalDateTime time = msg.getMessageDateTime();
+            //*********Msg to receptor******
+            String receptorUsername = msg.getReceptor();
+            String mensage = msg.getText();
+            String senderUsername = msg.getSender();
+            LocalDateTime time = msg.getMessageDateTime();
             User userdto = userBean.getUserByUsername(receptorUsername);
             UserEntity userEntity = userBean.convertToEntity(userdto);
             User senderDto = userBean.getUserByUsername(senderUsername);

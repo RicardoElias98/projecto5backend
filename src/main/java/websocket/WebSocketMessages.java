@@ -61,11 +61,15 @@ public class WebSocketMessages {
                 .create();
         Mensage msgAgain = gson.fromJson(msg, Mensage.class);
         String usernameReceptor= msgAgain.getReceptor();
+        String usernameSender = msgAgain.getSender();
         String token = userbean.getUserByUsername(usernameReceptor).getToken();
+        String tokenSender = userbean.getUserByUsername(usernameSender).getToken();
         Session receiverSession = sessions.get(token);
+        Session senderSession = sessions.get(tokenSender);
         System.out.println("A new message is received: " + msgAgain.getText());
         try {
             receiverSession.getBasicRemote().sendObject(msg);
+            senderSession.getBasicRemote().sendObject(msg);
         } catch (IOException e) {
             System.out.println("Something went wrong!");
         } catch (EncodeException e) {
