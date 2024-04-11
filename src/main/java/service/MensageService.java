@@ -41,7 +41,7 @@ public class MensageService {
         if (!user) {
             return Response.status(403).entity("User with this token is not found").build();
         } else  {
-            //*********Msg to receptor******
+
             String receptorUsername = msg.getReceptor();
             String mensage = msg.getText();
             String senderUsername = msg.getSender();
