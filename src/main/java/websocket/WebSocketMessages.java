@@ -65,9 +65,11 @@ public class WebSocketMessages {
         Session receiverSession = sessions.get(token);
         System.out.println("A new message is received: " + msgAgain.getText());
         try {
-            receiverSession.getBasicRemote().sendText(msgAgain.getText());
+            receiverSession.getBasicRemote().sendObject(msg);
         } catch (IOException e) {
             System.out.println("Something went wrong!");
+        } catch (EncodeException e) {
+            throw new RuntimeException(e);
         }
     }
 }

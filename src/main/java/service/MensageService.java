@@ -54,6 +54,7 @@ public class MensageService {
                     .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                     .create();
             String jsonMsg = gson.toJson(msg);
+            System.out.println(jsonMsg);
             webSocketMessages.toDoOnMessage(jsonMsg);
             return Response.status(201).entity("A new msg is created").build();
         }
