@@ -63,11 +63,16 @@ public class MensageBean {
 
     public void updateChecked (int msgId, boolean checked) {
         MensageEntity msgEntity = mensageDao.find(msgId);
+        List <MensageEntity> msgEntityTotal = mensageDao.findMsgBySenderAndReceptor(msgEntity.getSender(),msgEntity.getReceptor());
         System.out.println(msgEntity);
         System.out.println(msgEntity.getText());
         System.out.println(msgEntity.isChecked());
         System.out.println(checked);
-        msgEntity.setChecked(checked);
-        mensageDao.persist(msgEntity);
+        for (MensageEntity message : msgEntityTotal) {
+            if (message.getId() <= msgId) {
+                message.setChecked(checked);
+                mensageDao.persist(message);
+            }
+        }
     }
 }
