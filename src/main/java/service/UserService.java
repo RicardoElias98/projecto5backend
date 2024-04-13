@@ -26,6 +26,21 @@ public class UserService {
     @Inject
     EncryptHelper encryptHelper;
 
+    @PUT
+    @Path("/checkNotification")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkNotification(@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            User userToUsername = userBean.getUser(token);
+            String username = userToUsername.getUsername();
+            List<Notification> notificationList = userBean.getNotifications(username);
+            userBean.checkNotifications(notificationList);
+            return Response.status(200).entity("Notifications checked").build();
+        }
+    }
 
     @GET
     @Path("/notifications")

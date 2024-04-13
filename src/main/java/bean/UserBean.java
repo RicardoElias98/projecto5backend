@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.MensageDao;
+import dao.NotificationDao;
 import dao.UserDao;
 import dto.*;
 import entities.NotificationEntity;
@@ -22,6 +24,9 @@ public class UserBean {
     UserDao userDao;
     @EJB
     TaskBean taskDao;
+
+    @EJB
+    NotificationDao notificationDao;
     @EJB
     EncryptHelper EncryptHelper;
 
@@ -230,6 +235,19 @@ public class UserBean {
         return notificationsList;
     }
 
+    public List<NotificationEntity> dtoToEntityNotification(List<Notification> dtoList) {
+        List<NotificationEntity> entityList = new ArrayList<>();
+        for (Notification dto : dtoList) {
+            NotificationEntity entity = new NotificationEntity();
+            entity.setId(dto.getId());
+            entity.setChecked(dto.isChecked());
+            entity.setText(dto.getText());
+            entity.setNotificationDateTime(dto.getNotificationDateTime());
+            entityList.add(entity);
+        }
+        return entityList;
+    }
+
     public User convertToDto(UserEntity userEntity) {
         User user = new User();
         user.setUsername(userEntity.getUsername());
@@ -410,6 +428,14 @@ public class UserBean {
 
         List<NotificationEntity> list = userEntity.getNotifications();
         list.add(convertNotificationDtoToEntity(notification));
+    }
+
+    public void checkNotifications(List<Notification> dtoList) {
+        List<NotificationEntity> entityList = dtoToEntityNotification(dtoList);
+        for (NotificationEntity ntf : entityList) {
+            ntf.setChecked(true);
+            notificationDao.merge(ntf);
+        }
     }
 }
 
