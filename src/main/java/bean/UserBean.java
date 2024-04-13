@@ -1,28 +1,15 @@
 package bean;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import dao.UserDao;
-import dto.PasswordDto;
-import dto.Task;
-import dto.UserDto;
+import dto.*;
+import entities.NotificationEntity;
 import entities.TaskEntity;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
-import jakarta.ejb.Startup;
-import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
-import dto.User;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbConfig;
-import jakarta.security.enterprise.credential.Password;
 import utilities.EncryptHelper;
 
 @Singleton
@@ -79,6 +66,7 @@ public class UserBean {
         }
         return false;
     }
+
     public boolean ownerupdateUser(String token, User user) {
         UserEntity a = userDao.findUserByUsername(user.getUsername());
         UserEntity responsible = userDao.findUserByToken(token);
@@ -110,6 +98,7 @@ public class UserBean {
         }
         return false;
     }
+
     public boolean updatePassword(String token, PasswordDto password) {
         UserEntity a = userDao.findUserByToken(token);
         if (a != null) {
@@ -121,6 +110,7 @@ public class UserBean {
         }
         return false;
     }
+
     public boolean isPasswordValid(PasswordDto password) {
         if (password.getPassword().isBlank() || password.getNewPassword().isBlank()) {
             return false;
@@ -130,10 +120,10 @@ public class UserBean {
         return true;
     }
 
-public boolean findOtherUserByUsername(String username) {
+    public boolean findOtherUserByUsername(String username) {
         UserEntity a = userDao.findUserByUsername(username);
-      return a != null;
-}
+        return a != null;
+    }
 
     public String login(String username, String password) {
         UserEntity user = userDao.findUserByUsername(username);
@@ -207,7 +197,22 @@ public boolean findOtherUserByUsername(String username) {
         userEntity.setToken(user.getToken());
         userEntity.setRole(user.getRole());
         userEntity.setActive(user.isActive());
-        userEntity.setNotification(user.getNotification());
+        List<Notification> notificationsList = user.getNotification();
+        if (notificationsList != null) {
+            List<NotificationEntity> notificationEntities = new ArrayList<>();
+            for (Notification dto : notificationsList) {
+                NotificationEntity entity = new NotificationEntity();
+                entity.setId(dto.getId());
+                entity.setChecked(dto.isChecked());
+                entity.setText(dto.getText());
+                entity.setNotificationDateTime(dto.getNotificationDateTime());
+                notificationEntities.add(entity);
+            }
+            userEntity.setNotifications(notificationEntities);
+        } else {
+            List<NotificationEntity> notificationEntitiesEmpty = new ArrayList<>();
+            userEntity.setNotifications(notificationEntitiesEmpty);
+        }
         return userEntity;
     }
 
@@ -222,7 +227,22 @@ public boolean findOtherUserByUsername(String username) {
         user.setToken(userEntity.getToken());
         user.setRole(userEntity.getRole());
         user.setActive(userEntity.isActive());
-        user.setNotification(userEntity.getNotification());
+        List<NotificationEntity> notificationEntities = userEntity.getNotifications();
+        if (notificationEntities != null) {
+            List<Notification> notificationsList = new ArrayList<>();
+            for (NotificationEntity n : notificationEntities) {
+                Notification dto = new Notification();
+                dto.setId(n.getId());
+                dto.setChecked(n.isChecked());
+                dto.setText(n.getText());
+                dto.setNotificationDateTime(n.getNotificationDateTime());
+                notificationsList.add(dto);
+            }
+            user.setNotification(notificationsList);
+        } else {
+            List<Notification> listemptydto = new ArrayList<>();
+            user.setNotification(listemptydto);
+        }
         return user;
     }
 
@@ -240,7 +260,7 @@ public boolean findOtherUserByUsername(String username) {
     }
 
     public boolean deleteUser(String token, String username) {
-        if(username.equals("admin") || username.equals("deleted")){
+        if (username.equals("admin") || username.equals("deleted")) {
             return false;
         }
 
@@ -253,10 +273,10 @@ public boolean findOtherUserByUsername(String username) {
             return true;
         }
         if (responsible.getRole().equals("Owner") && !user.isActive()) {
-            if(doesUserHaveTasks(username)){
+            if (doesUserHaveTasks(username)) {
                 List<TaskEntity> tasks = taskDao.getTasksByUser(user);
                 UserEntity deletedUser = userDao.findUserByUsername("deleted");
-                for(TaskEntity task: tasks){
+                for (TaskEntity task : tasks) {
                     task.setUser(deletedUser);
                     taskDao.updateTask(task);
                 }
@@ -311,8 +331,9 @@ public boolean findOtherUserByUsername(String username) {
             return false;
         }
     }
+
     public void createDefaultUsers() {
-        if(userDao.findUserByUsername("admin") == null) {
+        if (userDao.findUserByUsername("admin") == null) {
             UserEntity userEntity = new UserEntity();
             userEntity.setUsername("admin");
             userEntity.setName("admin");
@@ -324,7 +345,7 @@ public boolean findOtherUserByUsername(String username) {
             userEntity.setActive(true);
             userDao.persist(userEntity);
         }
-        if(userDao.findUserByUsername("deleted") == null) {
+        if (userDao.findUserByUsername("deleted") == null) {
 
             UserEntity userEntity1 = new UserEntity();
             userEntity1.setUsername("deleted");
@@ -339,9 +360,9 @@ public boolean findOtherUserByUsername(String username) {
         }
     }
 
-    public List <UserDto> getUserBySearch (String name) {
+    public List<UserDto> getUserBySearch(String name) {
         List<UserEntity> entity = userDao.searchUsersByUsername(name);
-        List <UserDto> dto = new ArrayList<>();
+        List<UserDto> dto = new ArrayList<>();
         for (UserEntity entity1 : entity) {
             dto.add(convertUsertoUserDto(convertToDto(entity1)));
         }

@@ -3,9 +3,7 @@ package dto;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.List;
 
 @XmlRootElement
 public class User {
@@ -22,12 +20,12 @@ public class User {
     String token;
     boolean active = true;
 
-    int notification;
+    List <Notification> notification;
 
     public User() {
     }
 
-    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, Integer notification) {
+    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, List <Notification> notification) {
 
         this.username = username;
         this.name = name;
@@ -35,11 +33,7 @@ public class User {
         this.password = password;
         this.contactNumber = contactNumber;
         this.userPhoto = userPhoto;
-        if (notification == null) {
-            this.notification = 0;
-        } else {
-            this.notification = notification;
-        }
+        this.notification=notification;
         if (role == null || role.isEmpty()) {
             this.role = "Developer";
         } else {
@@ -49,11 +43,11 @@ public class User {
     }
 
     @XmlElement
-    public int getNotification() {
+    public List<Notification> getNotification() {
         return notification;
     }
 
-    public void setNotification(int notification) {
+    public void setNotification(List<Notification> notification) {
         this.notification = notification;
     }
 

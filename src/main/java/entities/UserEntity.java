@@ -1,9 +1,9 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
+import dto.Notification;
 import jakarta.persistence.*;
 @Entity
 @Table(name="Users")
@@ -32,16 +32,8 @@ public class UserEntity implements Serializable{
     String role;
     @Column (name="active", nullable = false, unique = false)
     boolean active;
-    @Column (name = "notification", nullable = true, unique = false, updatable = true)
-    int notification;
-
-    public int getNotification() {
-        return notification;
-    }
-
-    public void setNotification(int notification) {
-        this.notification = notification;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<NotificationEntity> notifications;
 
     public String getUsername() {
         return username;
@@ -112,7 +104,12 @@ public class UserEntity implements Serializable{
     }
 
 
+    public List<NotificationEntity> getNotifications() {
+        return notifications;
+    }
 
-
+    public void setNotifications(List<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
 }
 
