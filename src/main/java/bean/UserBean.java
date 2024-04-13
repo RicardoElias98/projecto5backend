@@ -207,6 +207,7 @@ public boolean findOtherUserByUsername(String username) {
         userEntity.setToken(user.getToken());
         userEntity.setRole(user.getRole());
         userEntity.setActive(user.isActive());
+        userEntity.setNotification(user.getNotification());
         return userEntity;
     }
 
@@ -221,6 +222,7 @@ public boolean findOtherUserByUsername(String username) {
         user.setToken(userEntity.getToken());
         user.setRole(userEntity.getRole());
         user.setActive(userEntity.isActive());
+        user.setNotification(userEntity.getNotification());
         return user;
     }
 

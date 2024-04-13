@@ -32,7 +32,16 @@ public class UserEntity implements Serializable{
     String role;
     @Column (name="active", nullable = false, unique = false)
     boolean active;
+    @Column (name = "notification", nullable = true, unique = false, updatable = true)
+    int notification;
 
+    public int getNotification() {
+        return notification;
+    }
+
+    public void setNotification(int notification) {
+        this.notification = notification;
+    }
 
     public String getUsername() {
         return username;

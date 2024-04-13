@@ -1,4 +1,5 @@
 package dto;
+
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -21,10 +22,12 @@ public class User {
     String token;
     boolean active = true;
 
+    int notification;
+
     public User() {
     }
 
-    public User( String username, String name, String email, String password, String contactNumber, String userPhoto, String role) {
+    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, Integer notification) {
 
         this.username = username;
         this.name = name;
@@ -32,15 +35,27 @@ public class User {
         this.password = password;
         this.contactNumber = contactNumber;
         this.userPhoto = userPhoto;
-        if(role == null || role.isEmpty()){
+        if (notification == null) {
+            this.notification = 0;
+        } else {
+            this.notification = notification;
+        }
+        if (role == null || role.isEmpty()) {
             this.role = "Developer";
-        }else {
+        } else {
             this.role = role;
         }
         this.active = true;
     }
 
+    @XmlElement
+    public int getNotification() {
+        return notification;
+    }
 
+    public void setNotification(int notification) {
+        this.notification = notification;
+    }
 
     @XmlElement
     public String getName() {
@@ -82,20 +97,25 @@ public class User {
     public String getContactNumber() {
         return contactNumber;
     }
+
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
-    public void setUserPhoto(String userPhoto){
+
+    public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
     }
+
     @XmlElement
-    public String getUserPhoto(){
+    public String getUserPhoto() {
         return userPhoto;
     }
+
     @XmlElement
     public String getRole() {
         return role;
     }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -132,10 +152,12 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
     @XmlElement
     public boolean isActive() {
         return active;
     }
+
     public void setActive(boolean active) {
         this.active = active;
     }
