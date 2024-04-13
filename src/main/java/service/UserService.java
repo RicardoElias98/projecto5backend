@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import bean.UserBean;
-import dto.PasswordDto;
-import dto.Task;
-import dto.User;
-import dto.UserDto;
+import dto.*;
 import entities.UserEntity;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +25,23 @@ public class UserService {
     UserBean userBean;
     @Inject
     EncryptHelper encryptHelper;
+
+
+    @GET
+    @Path("/notifications")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNotifications(@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+           User userToUsername = userBean.getUser(token);
+           String username = userToUsername.getUsername();
+            List<Notification> notificationList = userBean.getNotifications(username);
+            return Response.status(200).entity(notificationList).build();
+        }
+
+    }
 
     @GET
     @Path("/all")

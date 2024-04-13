@@ -216,6 +216,19 @@ public class UserBean {
         return userEntity;
     }
 
+    public List<Notification> entityToDtoNotification (List<NotificationEntity> entityList){
+        List<Notification> notificationsList = new ArrayList<>();
+        for (NotificationEntity n : entityList) {
+            Notification dto = new Notification();
+            dto.setId(n.getId());
+            dto.setChecked(n.isChecked());
+            dto.setText(n.getText());
+            dto.setNotificationDateTime(n.getNotificationDateTime());
+            notificationsList.add(dto);
+        }
+        return notificationsList;
+    }
+
     public User convertToDto(UserEntity userEntity) {
         User user = new User();
         user.setUsername(userEntity.getUsername());
@@ -367,6 +380,13 @@ public class UserBean {
             dto.add(convertUsertoUserDto(convertToDto(entity1)));
         }
         return dto;
+    }
+
+    public List<Notification> getNotifications(String username) {
+        UserEntity user = userDao.findUserByUsername(username);
+        List<NotificationEntity> entityList = user.getNotifications();
+        List<Notification> dtoList = entityToDtoNotification(entityList);
+        return dtoList;
     }
 }
 
