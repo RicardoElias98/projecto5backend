@@ -404,8 +404,10 @@ public class UserBean {
         notification.setNotificationDateTime(time);
         notification.setChecked(false);
         notification.setText("Hey, you received a message from " + usernameSender + "on this date " + time);
-
         UserEntity userEntity = userDao.findUserByUsername(usernameReceptor);
+        notification.setUser(userEntity);
+
+
         List<NotificationEntity> list = userEntity.getNotifications();
         list.add(convertNotificationDtoToEntity(notification));
     }

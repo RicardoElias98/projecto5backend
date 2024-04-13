@@ -1,5 +1,6 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -25,6 +26,7 @@ public class NotificationEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "id")
+    @JsonIgnore
     private UserEntity user;
 
     public int getId() {
