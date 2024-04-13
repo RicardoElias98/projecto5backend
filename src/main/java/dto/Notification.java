@@ -1,5 +1,6 @@
 package dto;
 
+import entities.UserEntity;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -16,7 +17,15 @@ public class Notification {
 
     private String text;
 
+    private UserEntity user;
+
     public Notification() {
+    }
+
+
+    @XmlElement
+    public UserEntity getUser() {
+        return user;
     }
 
     @XmlElement
@@ -53,5 +62,9 @@ public class Notification {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }

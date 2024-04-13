@@ -1,5 +1,6 @@
 package bean;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -387,6 +388,26 @@ public class UserBean {
         List<NotificationEntity> entityList = user.getNotifications();
         List<Notification> dtoList = entityToDtoNotification(entityList);
         return dtoList;
+    }
+
+    public NotificationEntity convertNotificationDtoToEntity (Notification dto) {
+        NotificationEntity entity = new NotificationEntity();
+        entity.setUser(dto.getUser());
+        entity.setText(dto.getText());
+        entity.setChecked(dto.isChecked());
+        entity.setNotificationDateTime(dto.getNotificationDateTime());
+        return entity;
+    }
+
+    public void createNotificationMsg (String usernameSender, LocalDateTime time, String usernameReceptor) {
+        Notification notification = new Notification();
+        notification.setNotificationDateTime(time);
+        notification.setChecked(false);
+        notification.setText("Hey, you received a message from " + usernameSender + "on this date " + time);
+
+        UserEntity userEntity = userDao.findUserByUsername(usernameReceptor);
+        List<NotificationEntity> list = userEntity.getNotifications();
+        list.add(convertNotificationDtoToEntity(notification));
     }
 }
 

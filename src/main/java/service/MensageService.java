@@ -57,6 +57,7 @@ public class MensageService {
             String jsonMsg = gson.toJson(msg);
             System.out.println(jsonMsg);
             webSocketMessages.toDoOnMessage(jsonMsg);
+            userBean.createNotificationMsg(senderUsername,msg.getMessageDateTime(),receptorUsername);
             return Response.status(201).entity("A new msg is created").build();
         }
     }
