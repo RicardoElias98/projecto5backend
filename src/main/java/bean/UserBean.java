@@ -30,12 +30,16 @@ public class UserBean {
     @EJB
     EncryptHelper EncryptHelper;
 
-    public void addUser(User a) {
+    public User addUser(User a) {
 
         a.setPassword(EncryptHelper.encryptPassword(a.getPassword()));
-
+        a.setConfirmed(false);
+        String confirmationToken = generateToken();
+        a.setConfirmationToken(confirmationToken);
+        System.out.println("confirmation Token " + a.getConfirmationToken() );
         UserEntity userEntity = convertToEntity(a);
         userDao.persist(userEntity);
+        return a;
     }
 
     public User getUser(String token) {
@@ -203,6 +207,7 @@ public class UserBean {
         userEntity.setToken(user.getToken());
         userEntity.setRole(user.getRole());
         userEntity.setActive(user.isActive());
+        userEntity.setConfirmationToken(user.getConfirmationToken());
         return userEntity;
     }
 

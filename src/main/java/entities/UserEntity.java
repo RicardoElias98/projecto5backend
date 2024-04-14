@@ -33,6 +33,29 @@ public class UserEntity implements Serializable{
     @Column (name="active", nullable = false, unique = false)
     boolean active;
 
+    @Column (name="confirmed", nullable = false, unique = false,updatable = true)
+    boolean confirmed;
+
+    @Column(name="confirmationToken", nullable = true, unique = true, updatable = true)
+    String confirmationToken;
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
     public String getUsername() {
         return username;
     }

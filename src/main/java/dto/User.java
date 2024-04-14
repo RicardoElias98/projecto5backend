@@ -20,12 +20,14 @@ public class User {
     String token;
     boolean active = true;
 
-    List <Notification> notification;
+    boolean confirmed;
+
+    String confirmationToken;
 
     public User() {
     }
 
-    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, List <Notification> notification) {
+    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, boolean confirmed, String confirmationToken) {
 
         this.username = username;
         this.name = name;
@@ -33,7 +35,8 @@ public class User {
         this.password = password;
         this.contactNumber = contactNumber;
         this.userPhoto = userPhoto;
-        this.notification=notification;
+        this.confirmed = confirmed;
+        this.confirmationToken=confirmationToken;
         if (role == null || role.isEmpty()) {
             this.role = "Developer";
         } else {
@@ -43,12 +46,21 @@ public class User {
     }
 
     @XmlElement
-    public List<Notification> getNotification() {
-        return notification;
+    public String getConfirmationToken() {
+        return confirmationToken;
     }
 
-    public void setNotification(List<Notification> notification) {
-        this.notification = notification;
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    @XmlElement
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     @XmlElement

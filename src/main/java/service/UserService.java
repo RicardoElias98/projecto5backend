@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.hibernate.query.sqm.function.SelfRenderingOrderedSetAggregateFunctionSqlAstExpression;
+import utilities.EmailSender;
 import utilities.EncryptHelper;
 
 
@@ -25,6 +26,9 @@ public class UserService {
     UserBean userBean;
     @Inject
     EncryptHelper encryptHelper;
+
+    @Inject
+    EmailSender emailSender;
 
    /* @PUT
     @Path("/checkNotification")
@@ -81,14 +85,13 @@ public class UserService {
         }
         boolean user = userBean.userNameExists(a.getUsername());
         if (user) {
-
             return Response.status(409).entity("User with this username is already exists").build();
         } else {
             if (a.getRole() == null || a.getRole().isEmpty()) {
                 a.setRole("developer");
             }
-
-            userBean.addUser(a);
+            User userWithConfirmationToken = userBean.addUser(a);
+            emailSender.sendConfirmationEmail("testeAor@hotmail.com",userWithConfirmationToken.getConfirmationToken());
             return Response.status(201).entity("A new user is created").build();
         }
     }
