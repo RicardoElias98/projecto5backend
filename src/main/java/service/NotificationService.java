@@ -39,6 +39,18 @@ public class NotificationService {
         }
     }
 
+    @GET
+    @Path("/notificationsNotChecked")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNotifications(@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            List<Notification> listNotif = notificationBean.getNotCheckedNotif(token);
+            return Response.status(200).entity(listNotif).build();
+        }
+    }
     @PUT
     @Path("/checkNotification")
     @Produces(MediaType.APPLICATION_JSON)

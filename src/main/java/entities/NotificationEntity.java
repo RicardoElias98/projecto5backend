@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "Notification")
 @NamedQuery( name = "Notification.findByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user")
+@NamedQuery(name = "Notification.findUncheckedByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user AND n.checked = false"
+)
+
 public class NotificationEntity implements Serializable {
 
     @Id

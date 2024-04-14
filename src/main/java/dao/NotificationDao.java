@@ -27,5 +27,11 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         return query.getResultList();
     }
 
+    public List<NotificationEntity> findUncheckedNotificationsByUser(UserEntity user) {
+        return em.createNamedQuery("Notification.findUncheckedByUser", NotificationEntity.class)
+                .setParameter("user", user)
+                .getResultList();
+    }
+
 
 }

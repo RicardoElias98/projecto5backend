@@ -74,5 +74,16 @@ public class NotificationBean {
         }
     }
 
+    public List <Notification> getNotCheckedNotif (String token) {
+        UserEntity userEntity = userDao.findUserByToken(token);
+        List <NotificationEntity> entityList = notificationDao.findUncheckedNotificationsByUser(userEntity);
+        List <Notification> dtoList = new ArrayList<>();
+        for (NotificationEntity entity : entityList) {
+            Notification dto = convertNotificationEntityToDto(entity);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
 
 }
