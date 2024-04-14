@@ -203,22 +203,6 @@ public class UserBean {
         userEntity.setToken(user.getToken());
         userEntity.setRole(user.getRole());
         userEntity.setActive(user.isActive());
-        List<Notification> notificationsList = user.getNotification();
-        if (notificationsList != null) {
-            List<NotificationEntity> notificationEntities = new ArrayList<>();
-            for (Notification dto : notificationsList) {
-                NotificationEntity entity = new NotificationEntity();
-                entity.setId(dto.getId());
-                entity.setChecked(dto.isChecked());
-                entity.setText(dto.getText());
-                entity.setNotificationDateTime(dto.getNotificationDateTime());
-                notificationEntities.add(entity);
-            }
-            userEntity.setNotifications(notificationEntities);
-        } else {
-            List<NotificationEntity> notificationEntitiesEmpty = new ArrayList<>();
-            userEntity.setNotifications(notificationEntitiesEmpty);
-        }
         return userEntity;
     }
 
@@ -259,22 +243,6 @@ public class UserBean {
         user.setToken(userEntity.getToken());
         user.setRole(userEntity.getRole());
         user.setActive(userEntity.isActive());
-        List<NotificationEntity> notificationEntities = userEntity.getNotifications();
-        if (notificationEntities != null) {
-            List<Notification> notificationsList = new ArrayList<>();
-            for (NotificationEntity n : notificationEntities) {
-                Notification dto = new Notification();
-                dto.setId(n.getId());
-                dto.setChecked(n.isChecked());
-                dto.setText(n.getText());
-                dto.setNotificationDateTime(n.getNotificationDateTime());
-                notificationsList.add(dto);
-            }
-            user.setNotification(notificationsList);
-        } else {
-            List<Notification> listemptydto = new ArrayList<>();
-            user.setNotification(listemptydto);
-        }
         return user;
     }
 
@@ -401,23 +369,16 @@ public class UserBean {
         return dto;
     }
 
-    public List<Notification> getNotifications(String username) {
-        UserEntity user = userDao.findUserByUsername(username);
-        List<NotificationEntity> entityList = user.getNotifications();
-        List<Notification> dtoList = entityToDtoNotification(entityList);
-        return dtoList;
-    }
-
-    public NotificationEntity convertNotificationDtoToEntity (Notification dto) {
+    /* public NotificationEntity convertNotificationDtoToEntity (Notification dto) {
         NotificationEntity entity = new NotificationEntity();
         entity.setUser(dto.getUser());
         entity.setText(dto.getText());
         entity.setChecked(dto.isChecked());
         entity.setNotificationDateTime(dto.getNotificationDateTime());
         return entity;
-    }
+    } */
 
-    public void createNotificationMsg (String usernameSender, LocalDateTime time, String usernameReceptor) {
+    /* public void createNotificationMsg (String usernameSender, LocalDateTime time, String usernameReceptor) {
         Notification notification = new Notification();
         notification.setNotificationDateTime(time);
         notification.setChecked(false);
@@ -428,15 +389,15 @@ public class UserBean {
 
         List<NotificationEntity> list = userEntity.getNotifications();
         list.add(convertNotificationDtoToEntity(notification));
-    }
+    } */
 
-    public void checkNotifications(List<Notification> dtoList) {
+    /* public void checkNotifications(List<Notification> dtoList) {
         List<NotificationEntity> entityList = dtoToEntityNotification(dtoList);
         for (NotificationEntity ntf : entityList) {
             ntf.setChecked(true);
             notificationDao.merge(ntf);
         }
-    }
+    } */
 }
 
 

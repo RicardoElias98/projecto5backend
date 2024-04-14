@@ -26,7 +26,7 @@ public class UserService {
     @Inject
     EncryptHelper encryptHelper;
 
-    @PUT
+   /* @PUT
     @Path("/checkNotification")
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkNotification(@HeaderParam("token") String token) {
@@ -40,9 +40,9 @@ public class UserService {
             userBean.checkNotifications(notificationList);
             return Response.status(200).entity("Notifications checked").build();
         }
-    }
+    } */
 
-    @GET
+   /* @GET
     @Path("/notifications")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNotifications(@HeaderParam("token") String token) {
@@ -56,7 +56,7 @@ public class UserService {
             return Response.status(200).entity(notificationList).build();
         }
 
-    }
+    } */
 
     @GET
     @Path("/all")

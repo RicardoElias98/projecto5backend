@@ -1,6 +1,7 @@
 package service;
 
 import bean.MensageBean;
+import bean.NotificationBean;
 import bean.UserBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,8 +30,12 @@ public class MensageService {
     @Inject
     UserBean userBean;
 
+    @Inject
+    NotificationBean notificationBean;
+
     @EJB
     WebSocketMessages webSocketMessages;
+
 
     @POST
     @Path("/create")
@@ -57,7 +62,7 @@ public class MensageService {
             String jsonMsg = gson.toJson(msg);
             System.out.println(jsonMsg);
             webSocketMessages.toDoOnMessage(jsonMsg);
-            userBean.createNotificationMsg(senderUsername,msg.getMessageDateTime(),receptorUsername);
+            notificationBean.createNotificationMsg(senderUsername,msg.getMessageDateTime(),receptorUsername);
             return Response.status(201).entity("A new msg is created").build();
         }
     }

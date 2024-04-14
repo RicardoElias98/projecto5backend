@@ -7,12 +7,13 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="Notification")
+@Table(name = "Notification")
+@NamedQuery( name = "Notification.findByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user")
 public class NotificationEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
 
     @Column(name = "notification_datetime", nullable = false, unique = false, updatable = false)
@@ -25,8 +26,7 @@ public class NotificationEntity implements Serializable {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "id")
-    @JsonIgnore
+    @JoinColumn(name = "user", nullable = false, unique = false, updatable = false)
     private UserEntity user;
 
     public int getId() {

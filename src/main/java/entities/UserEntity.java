@@ -32,8 +32,6 @@ public class UserEntity implements Serializable{
     String role;
     @Column (name="active", nullable = false, unique = false)
     boolean active;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<NotificationEntity> notifications;
 
     public String getUsername() {
         return username;
@@ -103,13 +101,5 @@ public class UserEntity implements Serializable{
         this.active = active;
     }
 
-
-    public List<NotificationEntity> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<NotificationEntity> notifications) {
-        this.notifications = notifications;
-    }
 }
 
