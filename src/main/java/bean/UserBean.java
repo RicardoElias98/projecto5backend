@@ -374,6 +374,24 @@ public class UserBean {
         return dto;
     }
 
+    public boolean confirmToken(String tokenConfirmation) {
+        UserEntity entity = userDao.findUserByConfirmationToken(tokenConfirmation);
+        if (tokenConfirmation.equals(entity.getConfirmationToken())) {
+            entity.setConfirmed(true);
+            userDao.merge(entity);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void updateFirstPass (String tokenConfirmation, String password) {
+        UserEntity entity = userDao.findUserByConfirmationToken(tokenConfirmation);
+        String pass = EncryptHelper.encryptPassword(password);
+        entity.setPassword(pass);
+        userDao.merge(entity);
+    }
+
     /* public NotificationEntity convertNotificationDtoToEntity (Notification dto) {
         NotificationEntity entity = new NotificationEntity();
         entity.setUser(dto.getUser());

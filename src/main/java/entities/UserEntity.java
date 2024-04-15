@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 @NamedQuery(name = "User.updateToken", query = "UPDATE UserEntity u SET u.token = :token WHERE u.username = :username")
 @NamedQuery(name = "User.searchUser", query = "SELECT u FROM UserEntity u WHERE u.name LIKE CONCAT(:searchTerm, '%')")
-
+@NamedQuery(name = "User.findUserByConfirmationToken", query = "SELECT u FROM UserEntity u WHERE u.confirmationToken = :confirmationToken")
 public class UserEntity implements Serializable{
     @Id
     @Column (name="id", nullable = false, unique = true, updatable = false)

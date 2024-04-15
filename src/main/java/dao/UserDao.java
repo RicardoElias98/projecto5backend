@@ -51,4 +51,16 @@ public class UserDao extends AbstractDao<UserEntity>{
             return new ArrayList<>();
         }
     }
+
+    public UserEntity findUserByConfirmationToken(String confirmationToken) {
+        try {
+            UserEntity user = em.createNamedQuery("User.findUserByConfirmationToken", UserEntity.class)
+                    .setParameter("confirmationToken", confirmationToken)
+                    .getSingleResult();
+            return user;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

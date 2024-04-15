@@ -62,6 +62,23 @@ public class UserService {
 
     } */
 
+    @PUT
+    @Path("/tokenConfirmationAndChangePassword")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response tokenConfirmation(@HeaderParam("tokenConfirmation") String tokenConfirmation, @HeaderParam("password") String password, @HeaderParam("passwordConfirmation") String passwordConfirmation) {
+            if (userBean.confirmToken(tokenConfirmation)) {
+                if (!password.equals(passwordConfirmation)){
+                    return Response.status(400).entity("Passwords are not the same").build();
+                } else {
+                    userBean.updateFirstPass(tokenConfirmation,password);
+                    return Response.status(200).entity("User is confirmated and first password is updated").build();
+                }
+            } else  {
+                return Response.status(403).entity("User with this token confirmation is not found").build();
+            }
+        }
+
+
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
