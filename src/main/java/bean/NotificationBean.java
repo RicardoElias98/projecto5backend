@@ -54,7 +54,7 @@ public class NotificationBean {
     }
 
 
-    public void createNotificationMsg (String usernameSender, LocalDateTime time, String usernameReceptor) {
+    public Notification createNotificationMsg (String usernameSender, LocalDateTime time, String usernameReceptor) {
         Notification notification = new Notification();
         notification.setNotificationDateTime(time);
         notification.setChecked(false);
@@ -63,6 +63,7 @@ public class NotificationBean {
         notification.setUser(userEntity);
         NotificationEntity entity = convertNotificationDtoToEntity(notification);
         notificationDao.persist(entity);
+        return notification;
     }
 
     public void checkNotifications(String token) {

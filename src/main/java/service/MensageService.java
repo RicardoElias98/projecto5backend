@@ -6,6 +6,7 @@ import bean.UserBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.Mensage;
+import dto.Notification;
 import dto.User;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import utilities.LocalDateTimeAdapter;
 import websocket.WebSocketMessages;
+import websocket.WebSocketNotifications;
 
 import javax.naming.NamingException;
 import java.time.LocalDateTime;
@@ -35,6 +37,9 @@ public class MensageService {
 
     @EJB
     WebSocketMessages webSocketMessages;
+
+    @EJB
+    WebSocketNotifications webSocketNotifications;
 
 
     @POST
@@ -62,7 +67,9 @@ public class MensageService {
             String jsonMsg = gson.toJson(msg);
             System.out.println(jsonMsg);
             webSocketMessages.toDoOnMessage(jsonMsg);
-            notificationBean.createNotificationMsg(senderUsername,msg.getMessageDateTime(),receptorUsername);
+            Notification notification = notificationBean.createNotificationMsg(senderUsername,msg.getMessageDateTime(),receptorUsername);
+            String jsonNoti = gson.toJson(notification);
+            webSocketNotifications.toDoOnMessage(jsonNoti);
             return Response.status(201).entity("A new msg is created").build();
         }
     }
