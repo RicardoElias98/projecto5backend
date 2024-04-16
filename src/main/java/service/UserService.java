@@ -205,18 +205,19 @@ public class UserService {
         if (username == null || password == null) {
             return Response.status(400).entity("Username and password headers are required").build();
         }
+
         User user = userBean.getUserByUsername(username);
 
         if (!user.isActive()) {
             return Response.status(403).entity("User is not active").build();
+        }  else if (!user.isConfirmed()) {
+            return Response.status(403).entity("User is not confirmed").build();
         } else {
             String token = userBean.login(username, password);
             if (token == null) {
                 return Response.status(404).entity("User with this username and password is not found").build();
             } else {
-
                 return Response.status(200).entity(token).build();
-
             }
         }
     }

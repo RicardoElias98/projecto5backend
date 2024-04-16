@@ -248,6 +248,7 @@ public class UserBean {
         user.setToken(userEntity.getToken());
         user.setRole(userEntity.getRole());
         user.setActive(userEntity.isActive());
+        user.setConfirmed(userEntity.isConfirmed());
         return user;
     }
 
@@ -348,6 +349,7 @@ public class UserBean {
             userEntity.setUserPhoto("https://cdn-icons-png.freepik.com/512/10015/10015419.png");
             userEntity.setRole("Owner");
             userEntity.setActive(true);
+            userEntity.setConfirmed(true);
             userDao.persist(userEntity);
         }
         if (userDao.findUserByUsername("deleted") == null) {
@@ -361,6 +363,7 @@ public class UserBean {
             userEntity1.setUserPhoto("https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png");
             userEntity1.setRole("developer");
             userEntity1.setActive(true);
+            userEntity1.setConfirmed(true);
             userDao.persist(userEntity1);
         }
     }
