@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.Mensage;
 import dto.Notification;
+import dto.Task;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
@@ -55,27 +56,22 @@ public class WebSocketTasks {
     }
 
     @OnMessage
-    public void toDoOnMessage(String notification) throws NamingException {
-        InitialContext ctx = new InitialContext();
+    public void toDoOnMessage(String task) throws NamingException {
+        /*InitialContext ctx = new InitialContext();
         userbean = (UserBean) ctx.lookup("java:module/UserBean");
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
-        Notification notiAgain = gson.fromJson(notification, Notification.class);
-        UserEntity user = notiAgain.getUser();
-        String username = user.getUsername();
-        String tokenUser = userbean.getUserByUsername(username).getToken();
-        Session receiverSession = sessions.get(tokenUser);
-        if (receiverSession!= null) {
-            try {
-                receiverSession.getBasicRemote().sendObject(notification);
-            } catch (IOException e) {
-                System.out.println("Something went wrong!");
-            } catch (EncodeException e) {
-                throw new RuntimeException(e);
+        Task taskAgain = gson.fromJson(task, Task.class);*/
+        for (Session session : sessions.values()) {
+            if (session.isOpen()) {
+                try {
+                    session.getBasicRemote().sendObject(task);
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error to sendind message " + e.getMessage());
+                }
             }
         }
-
     }
 
 }

@@ -251,14 +251,12 @@ public class TaskBean {
         }
         return false;
     }
-    public boolean changeStatus(String id, int status) {
+    public Task changeStatus(String id, int status) {
         TaskEntity a = taskDao.findTaskById(id);
-        if (a != null) {
-            a.setStatus(status);
-            taskDao.updateTask(a);
-            return true;
-        }
-        return false;
+        a.setStatus(status);
+        taskDao.updateTask(a);
+        Task dto = convertToDto(a);
+        return dto;
     }
     public List<CategoryEntity> getAllCategories() {
         return taskDao.findAllCategories();

@@ -2,6 +2,8 @@ package service;
 
 import bean.TaskBean;
 import bean.UserBean;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dto.Category;
 import dto.Task;
 import dto.TaskCreator;
@@ -9,6 +11,7 @@ import dto.User;
 import entities.TaskEntity;
 import entities.UserEntity;
 import entities.CategoryEntity;
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -20,17 +23,27 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.StringReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import jakarta.ws.rs.*;
+import utilities.LocalDateAdapter;
+import utilities.LocalDateTimeAdapter;
+import websocket.WebSocketTasks;
+
+import javax.naming.NamingException;
+
 @Path("/task")
 public class TaskService {
     @Inject
     TaskBean taskBean;
     @Inject
     UserBean userBean;
+
+    @EJB
+    WebSocketTasks webSocketTasks;
 
     @GET
     @Path("/all")
@@ -257,21 +270,24 @@ public class TaskService {
     @PUT
     @Path("/changeStatus/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeStatus(@HeaderParam("token") String token, @PathParam("id") String id,  String status) {
+    public Response changeStatus(@HeaderParam("token") String token, @PathParam("id") String id,  String status) throws NamingException {
         boolean authorized = userBean.isUserAuthorized(token);
         if (!authorized) {
             return Response.status(401).entity("Unauthorized").build();
         } else {
             JsonObject jsonObject = Json.createReader(new StringReader(status)).readObject();
             int newActiveStatus = jsonObject.getInt("status");
-            boolean changed = taskBean.changeStatus(id, newActiveStatus);
-            if (!changed) {
-                return Response.status(400).entity("Failed. Status not changed").build();
-            } else {
-                return Response.status(200).entity("Status changed").build();
+            Task taskdto = taskBean.changeStatus(id, newActiveStatus);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                    .create();
+            String jsonTask = gson.toJson(taskdto);
+            System.out.println(jsonTask);
+            webSocketTasks.toDoOnMessage(jsonTask);
+            return Response.status(200).entity("Status changed").build();
             }
         }
-    }
+
     @DELETE
     @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
