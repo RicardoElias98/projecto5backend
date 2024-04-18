@@ -137,7 +137,7 @@ public class TaskService {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addTask(Task task, @HeaderParam("token") String token) {
+    public Response addTask(Task task, @HeaderParam("token") String token) throws NamingException {
         boolean authorized = userBean.isUserAuthorized(token);
         if (!authorized) {
             return Response.status(401).entity("Unauthorized").build();
@@ -154,6 +154,13 @@ public class TaskService {
             UserEntity userEntity = userBean.convertToEntity(user);
             TaskEntity taskEntity = taskBean.createTaskEntity(task,userEntity);
             taskBean.addTask(taskEntity);
+
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                    .create();
+            String jsonTask = gson.toJson(task);
+            System.out.println(jsonTask);
+            webSocketTasks.toDoOnMessage(jsonTask);
             return Response.status(201).entity(taskBean.convertToDto(taskEntity)).build();
         }
     }
