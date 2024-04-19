@@ -22,10 +22,6 @@ import jakarta.persistence.*;
 @NamedQuery(name = "Task.countTasksByStatusAndActive", query = "SELECT COUNT(t) FROM TaskEntity t WHERE t.status = 30 AND t.active = true")
 
 
-
-
-
-
 public class TaskEntity implements Serializable {
     @Id
     @Column (name="id", nullable = false, unique = true, updatable = false)
