@@ -198,20 +198,17 @@ public class TaskBean {
     public CategoryEntity findCategoryById(int id) {
         return taskDao.findCategoryById(id);
     }
-    public boolean blockTask(String id,String role) {
+    public Task blockTask(String id,String role) {
         TaskEntity a = taskDao.findTaskById(id);
         if (a != null) {
             if(a.isActive() && !role.equals("developer")) {
                 a.setActive(false);
                 taskDao.updateTask(a);
-                return true;
-            }else if(!a.isActive()&& role.equals("Owner")) {
-                taskDao.remove(a);
-                return true;
+                Task tdto = convertToDto(a);
+                return tdto;
             }
-            return false;
         }
-        return false;
+        return null;
     }
     public boolean removeTask(String id) {
         TaskEntity a = taskDao.findTaskById(id);

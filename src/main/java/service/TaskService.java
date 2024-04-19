@@ -314,7 +314,7 @@ public class TaskService {
     @PUT
     @Path("/block/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response blockTask(@HeaderParam("token") String token, @PathParam("id") String id) {
+    public Response blockTask(@HeaderParam("token") String token, @PathParam("id") String id) throws NamingException {
         boolean authorized = userBean.isUserAuthorized(token);
         User user = userBean.getUser(token);
         String role = user.getRole();
@@ -322,10 +322,16 @@ public class TaskService {
         if (!authorized) {
             return Response.status(401).entity("Unauthorized").build();
         } else {
-            boolean blocked = taskBean.blockTask(id, role);
-            if (!blocked) {
+            Task blocked = taskBean.blockTask(id, role);
+            if (blocked == null) {
                 return Response.status(400).entity("Failed. Task not blocked").build();
             } else {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                        .create();
+                String jsonTask = gson.toJson(blocked);
+                System.out.println(jsonTask);
+                webSocketTasks.toDoOnMessage(jsonTask);
                 return Response.status(200).entity("Task blocked").build();
             }
         }

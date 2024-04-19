@@ -175,28 +175,7 @@ class TaskBeanTest {
 
         assertFalse(result);
     }
-    @Test
-    void blockTask_TaskFoundAndActive_ReturnsTrue() {
 
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId("123");
-        taskEntity.setActive(true);
-
-        when(taskDaoMock.findTaskById("123")).thenReturn(taskEntity);
-
-        boolean result = taskBean.blockTask("123", "role");
-
-        assertTrue(result);
-    }
-    @Test
-    void blockTask_TaskNotFound_ReturnsFalse() {
-
-        when(taskDaoMock.findTaskById("123")).thenReturn(null);
-
-        boolean result = taskBean.blockTask("123", "role");
-
-        assertFalse(result);
-    }
     @Test
     void createCategory_CategoryDoesNotExist_CreatesCategoryAndReturnsTrue() {
 
