@@ -25,14 +25,30 @@ public class WebSocketMessages {
 
     HashMap<String, Session> sessions = new HashMap<String, Session>();
 
-    public void send(String token, String msg) {
-        Session session = sessions.get(token);
-        if (session != null) {
-            System.out.println("sending.......... " + msg);
+    public void send( Mensage msgAgain, String msg) {
+        String usernameReceptor = msgAgain.getReceptor();
+        String usernameSender = msgAgain.getSender();
+        String token = userbean.getUserByUsername(usernameReceptor).getToken();
+        String tokenSender = userbean.getUserByUsername(usernameSender).getToken();
+        Session receiverSession = sessions.get(token);
+        Session senderSession = sessions.get(tokenSender);
+        System.out.println("A new message is received: " + msgAgain.getText());
+        if (receiverSession != null && senderSession != null) {
             try {
-                session.getBasicRemote().sendText(msg);
+                receiverSession.getBasicRemote().sendObject(msg);
+                senderSession.getBasicRemote().sendObject(msg);
             } catch (IOException e) {
                 System.out.println("Something went wrong!");
+            } catch (EncodeException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (receiverSession == null && senderSession != null) {
+            try {
+                senderSession.getBasicRemote().sendObject(msg);
+            } catch (IOException e) {
+                System.out.println("Something went wrong!");
+            } catch (EncodeException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -60,31 +76,8 @@ public class WebSocketMessages {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         Mensage msgAgain = gson.fromJson(msg, Mensage.class);
-        String usernameReceptor = msgAgain.getReceptor();
-        String usernameSender = msgAgain.getSender();
-        String token = userbean.getUserByUsername(usernameReceptor).getToken();
-        String tokenSender = userbean.getUserByUsername(usernameSender).getToken();
-        Session receiverSession = sessions.get(token);
-        Session senderSession = sessions.get(tokenSender);
-        System.out.println("A new message is received: " + msgAgain.getText());
-        if (receiverSession != null && senderSession != null) {
-            try {
-                receiverSession.getBasicRemote().sendObject(msg);
-                senderSession.getBasicRemote().sendObject(msg);
-            } catch (IOException e) {
-                System.out.println("Something went wrong!");
-            } catch (EncodeException e) {
-                throw new RuntimeException(e);
-            }
-        } else if (receiverSession == null && senderSession != null) {
-            try {
-                senderSession.getBasicRemote().sendObject(msg);
-            } catch (IOException e) {
-                System.out.println("Something went wrong!");
-            } catch (EncodeException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send(msgAgain,msg);
+
     }
 }
 
