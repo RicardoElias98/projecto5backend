@@ -15,6 +15,8 @@ import jakarta.persistence.*;
 @NamedQuery(name = "User.countTotalUsers", query = "SELECT COUNT(u) FROM UserEntity u")
 @NamedQuery(name = "User.countConfirmedUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.confirmed = true")
 @NamedQuery(name = "User.countUnconfirmedUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.confirmed = false")
+@NamedQuery(name = "User.countActiveUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.active = true")
+
 
 
 

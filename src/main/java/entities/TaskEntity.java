@@ -16,6 +16,13 @@ import jakarta.persistence.*;
 @NamedQuery(name="Task.findTaskByUserAndCategory", query="SELECT a FROM TaskEntity a WHERE a.user = :user and a.category= : category")
 @NamedQuery(name="Task.averageTasksPerUser", query="SELECT COUNT(t) / COUNT(DISTINCT t.user) FROM TaskEntity t")
 @NamedQuery(name="Task.countTasksByStatus", query="SELECT t.status, COUNT(t) FROM TaskEntity t GROUP BY t.status")
+@NamedQuery(name="Task.countTasksByCategory", query="SELECT t.category, COUNT(t) FROM TaskEntity t GROUP BY t.category ORDER BY COUNT(t) DESC")
+@NamedQuery(name="Task.countTasksByUser", query="SELECT t.user, COUNT(t) FROM TaskEntity t GROUP BY t.user")
+@NamedQuery(name="Task.countTasksByUserAndStatus", query="SELECT t.user, t.status, COUNT(t) FROM TaskEntity t GROUP BY t.user, t.status")
+@NamedQuery(name = "Task.countTasksByStatusAndActive", query = "SELECT COUNT(t) FROM TaskEntity t WHERE t.status = 30 AND t.active = true")
+
+
+
 
 
 
