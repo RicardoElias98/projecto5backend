@@ -28,14 +28,14 @@ public class WebSocketTasks {
 
     HashMap<String, Session> sessions = new HashMap<String, Session>();
 
-    public void send(String token, String msg) {
-        Session session = sessions.get(token);
-        if (session != null) {
-            System.out.println("sending.......... " + msg);
-            try {
-                session.getBasicRemote().sendText(msg);
-            } catch (IOException e) {
-                System.out.println("Something went wrong!");
+    public void send(String task) {
+        for (Session session : sessions.values()) {
+            if (session.isOpen()) {
+                try {
+                    session.getBasicRemote().sendObject(task);
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error to sendind message " + e.getMessage());
+                }
             }
         }
     }
@@ -63,15 +63,8 @@ public class WebSocketTasks {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         Task taskAgain = gson.fromJson(task, Task.class);*/
-        for (Session session : sessions.values()) {
-            if (session.isOpen()) {
-                try {
-                    session.getBasicRemote().sendObject(task);
-                } catch (IOException | EncodeException e) {
-                    System.out.println("Error to sendind message " + e.getMessage());
-                }
-            }
-        }
+        send(task);
+
     }
 
 }
