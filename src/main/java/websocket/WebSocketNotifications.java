@@ -26,14 +26,19 @@ public class WebSocketNotifications {
 
     HashMap<String, Session> sessions = new HashMap<String, Session>();
 
-    public void send(String token, String msg) {
-        Session session = sessions.get(token);
-        if (session != null) {
-            System.out.println("sending.......... " + msg);
+    public void send(Notification notiAgain, String notification) {
+
+        UserEntity user = notiAgain.getUser();
+        String username = user.getUsername();
+        String tokenUser = userbean.getUserByUsername(username).getToken();
+        Session receiverSession = sessions.get(tokenUser);
+        if (receiverSession!= null) {
             try {
-                session.getBasicRemote().sendText(msg);
+                receiverSession.getBasicRemote().sendObject(notification);
             } catch (IOException e) {
                 System.out.println("Something went wrong!");
+            } catch (EncodeException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -61,19 +66,8 @@ public class WebSocketNotifications {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         Notification notiAgain = gson.fromJson(notification, Notification.class);
-        UserEntity user = notiAgain.getUser();
-        String username = user.getUsername();
-        String tokenUser = userbean.getUserByUsername(username).getToken();
-        Session receiverSession = sessions.get(tokenUser);
-        if (receiverSession!= null) {
-            try {
-                receiverSession.getBasicRemote().sendObject(notification);
-            } catch (IOException e) {
-                System.out.println("Something went wrong!");
-            } catch (EncodeException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        send(notiAgain,notification);
+
 
     }
 
