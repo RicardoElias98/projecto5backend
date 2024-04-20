@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,22 @@ public class UserDao extends AbstractDao<UserEntity>{
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public long countConfirmedUsers() {
+        Query query = em.createNamedQuery("User.countConfirmedUsers");
+        return (long) query.getSingleResult();
+    }
+
+    public long countUnconfirmedUsers() {
+        Query query = em.createNamedQuery("User.countUnconfirmedUsers");
+        return (long) query.getSingleResult();
+    }
+
+    public double getAverageTasksPerUser() {
+        Query query = em.createNamedQuery("Task.averageTasksPerUser");
+        Long result = (Long) query.getSingleResult();
+        return result.doubleValue();
     }
 
 }

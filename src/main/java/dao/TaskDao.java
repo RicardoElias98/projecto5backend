@@ -7,6 +7,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,6 +147,13 @@ public class TaskDao extends AbstractDao<TaskEntity>{
             return null;
         }
     }
+
+    public long countTasksByStatus(int status) {
+        Query query = em.createNamedQuery("Task.countTasksByStatus");
+        query.setParameter("status", status);
+        return (long) query.getSingleResult();
+    }
+
 
 
 }

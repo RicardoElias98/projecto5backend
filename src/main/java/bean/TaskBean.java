@@ -33,6 +33,11 @@ public class TaskBean {
     public TaskBean(TaskDao taskDao) {
         this.taskDao = taskDao;
     }
+
+    public long getTasksByStatus(int status) {
+        long tasksByStatus = taskDao.countTasksByStatus(status);
+        return tasksByStatus;
+    }
     public boolean isTaskValid(Task task) {
         if (task.getTitle().isBlank() || task.getDescription().isBlank() || task.getStartDate() == null || task.getEndDate() == null || task.getCategory() == null) {
             return false;

@@ -3,6 +3,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import bean.TaskBean;
 import bean.UserBean;
 import dto.*;
 import entities.UserEntity;
@@ -29,6 +31,9 @@ public class UserService {
 
     @Inject
     EmailSender emailSender;
+
+    @Inject
+    TaskBean taskBean;
 
    /* @PUT
     @Path("/checkNotification")
@@ -61,6 +66,37 @@ public class UserService {
         }
 
     } */
+
+    @GET
+    @Path("/dashBoardInfo")
+    @Consumes (MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response dashBoardInfo (@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            ArrayList<Long> dbInfo = new ArrayList<>();
+            /* Info dos users confirmados */
+            long confirmedUsers = userBean.getConfirmedUsers();
+            dbInfo.add(confirmedUsers);
+            /* Info dos users não confirmados */
+            long notConfirmedUsers = userBean.getNotConfirmedUsers();
+            dbInfo.add(notConfirmedUsers);
+            /* Info do nº médio de tasks por user */
+            double medTasksByUser = userBean.getMedTaskByUser();
+            /* Info do nº de tasks por status */
+            long taskByStatus10 = taskBean.getTasksByStatus(10);
+            long taskByStatus20 = taskBean.getTasksByStatus(20);
+            long taskByStatus30 = taskBean.getTasksByStatus(30);
+            dbInfo.add(taskByStatus10);
+            dbInfo.add(taskByStatus20);
+            dbInfo.add(taskByStatus30);
+            return Response.status(200).entity(dbInfo).build();
+        }
+    }
+
+
 
     @PUT
     @Path("/tokenConfirmationAndChangePassword")
