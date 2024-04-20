@@ -77,25 +77,37 @@ public class UserService {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
             ArrayList<Long> dbInfo = new ArrayList<>();
-            /* Info dos users confirmados */
+            /* Info dos users confirmados [0] */
             long confirmedUsers = userBean.getConfirmedUsers();
             dbInfo.add(confirmedUsers);
-            /* Info dos users não confirmados */
+            /* Info dos users não confirmados [1]*/
             long notConfirmedUsers = userBean.getNotConfirmedUsers();
             dbInfo.add(notConfirmedUsers);
-            /* Info do nº médio de tasks por user */
-            double medTasksByUser = userBean.getMedTaskByUser();
             /* Info do nº de tasks por status */
             long taskByStatus10 = taskBean.getTasksByStatus(10);
             long taskByStatus20 = taskBean.getTasksByStatus(20);
             long taskByStatus30 = taskBean.getTasksByStatus(30);
-            dbInfo.add(taskByStatus10);
-            dbInfo.add(taskByStatus20);
-            dbInfo.add(taskByStatus30);
+            dbInfo.add(taskByStatus10); /* [2] */
+            dbInfo.add(taskByStatus20); /* [3] */
+            dbInfo.add(taskByStatus30); /* [4] */
             return Response.status(200).entity(dbInfo).build();
         }
     }
 
+    @GET
+    @Path("/dashBoardInfoMediaTasksByUser")
+    @Consumes (MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response dashBoardInfoMedia (@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            /* Info do nº médio de tasks por user */
+            double medTasksByUser = userBean.getMedTaskByUser();
+            return Response.status(200).entity(medTasksByUser).build();
+        }
+    }
 
 
     @PUT
