@@ -34,6 +34,11 @@ public class TaskBean {
         this.taskDao = taskDao;
     }
 
+    public List<Object[]> getListDescCate () {
+        List<Object[]> listDesCate = taskDao.countTasksByCategory();
+        return listDesCate;
+    }
+
     public long getTasksByStatus(int status) {
         long tasksByStatus = taskDao.countTasksByStatus(status);
         return tasksByStatus;

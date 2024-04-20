@@ -46,6 +46,20 @@ public class TaskService {
     WebSocketTasks webSocketTasks;
 
     @GET
+    @Path("/listDesCcategory")
+    @Consumes (MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listDesCcategory (@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            List<Object[]> listDes = taskBean.getListDescCate();
+            return Response.status(200).entity(listDes).build();
+        }
+    }
+
+    @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isUserValid(@HeaderParam("token") String token) {
