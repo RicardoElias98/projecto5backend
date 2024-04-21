@@ -3,6 +3,7 @@ package dto;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @XmlRootElement
@@ -24,10 +25,12 @@ public class User {
 
     String confirmationToken;
 
+    LocalDate registrationDate;
+
     public User() {
     }
 
-    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, boolean confirmed, String confirmationToken) {
+    public User(String username, String name, String email, String password, String contactNumber, String userPhoto, String role, boolean confirmed, String confirmationToken, LocalDate registrationDate) {
 
         this.username = username;
         this.name = name;
@@ -37,12 +40,23 @@ public class User {
         this.userPhoto = userPhoto;
         this.confirmed = confirmed;
         this.confirmationToken=confirmationToken;
+        this.registrationDate=registrationDate;
         if (role == null || role.isEmpty()) {
             this.role = "Developer";
         } else {
             this.role = role;
         }
         this.active = true;
+    }
+
+
+    @XmlElement
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     @XmlElement

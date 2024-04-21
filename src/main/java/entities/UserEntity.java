@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 import dto.Notification;
@@ -16,6 +17,7 @@ import jakarta.persistence.*;
 @NamedQuery(name = "User.countConfirmedUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.confirmed = true")
 @NamedQuery(name = "User.countUnconfirmedUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.confirmed = false")
 @NamedQuery(name = "User.countActiveUsers", query = "SELECT COUNT(u) FROM UserEntity u WHERE u.active = true")
+@NamedQuery(name = "User.countActiveUsersByRegistrationDate", query = "SELECT u.registrationDate, COUNT(u) FROM UserEntity u WHERE u.active = true GROUP BY u.registrationDate")
 
 
 
@@ -46,6 +48,17 @@ public class UserEntity implements Serializable{
 
     @Column(name="confirmationToken", nullable = true, unique = true, updatable = true)
     String confirmationToken;
+
+    @Column(name = "registrationDate", nullable = true, unique = false, updatable = true)
+    LocalDate registrationDate;
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
 
     public boolean isConfirmed() {
         return confirmed;

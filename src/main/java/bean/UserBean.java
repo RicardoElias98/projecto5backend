@@ -1,8 +1,10 @@
 package bean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import dao.MensageDao;
 import dao.NotificationDao;
@@ -36,6 +38,7 @@ public class UserBean {
         a.setConfirmed(false);
         String confirmationToken = generateToken();
         a.setConfirmationToken(confirmationToken);
+        a.setRegistrationDate(LocalDate.now());
         System.out.println("confirmation Token " + a.getConfirmationToken() );
         UserEntity userEntity = convertToEntity(a);
         userDao.persist(userEntity);
@@ -208,6 +211,7 @@ public class UserBean {
         userEntity.setRole(user.getRole());
         userEntity.setActive(user.isActive());
         userEntity.setConfirmationToken(user.getConfirmationToken());
+        userEntity.setRegistrationDate(user.getRegistrationDate());
         return userEntity;
     }
 
@@ -249,6 +253,7 @@ public class UserBean {
         user.setRole(userEntity.getRole());
         user.setActive(userEntity.isActive());
         user.setConfirmed(userEntity.isConfirmed());
+        user.setRegistrationDate(userEntity.getRegistrationDate());
         return user;
     }
 
@@ -350,6 +355,7 @@ public class UserBean {
             userEntity.setRole("Owner");
             userEntity.setActive(true);
             userEntity.setConfirmed(true);
+            userEntity.setRegistrationDate(LocalDate.of(2024, 4, 20));
             userDao.persist(userEntity);
         }
         if (userDao.findUserByUsername("deleted") == null) {
@@ -364,6 +370,7 @@ public class UserBean {
             userEntity1.setRole("developer");
             userEntity1.setActive(true);
             userEntity1.setConfirmed(true);
+            userEntity1.setRegistrationDate(LocalDate.of(2024, 4, 20));
             userDao.persist(userEntity1);
         }
     }
@@ -414,6 +421,10 @@ public class UserBean {
         long activeUsers = userDao.countActiveUsers();
         return activeUsers;
    }
+    public List getActiveUsersByDate () {
+        List<Map.Entry<LocalDate, Long>> list =userDao.countActiveUsersByRegistrationDate();
+        return list;
+    }
 
 
 

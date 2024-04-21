@@ -36,7 +36,7 @@ class UserBeanTest {
 
     @Test
     void addUser_ValidUser_AddsUser() {
-        User user = new User("testUser", "Test User", "test@example.com", "password", "123456789", "https://example.com/photo.jpg", "developer", true,"123");
+        User user = new User("testUser", "Test User", "test@example.com", "password", "123456789", "https://example.com/photo.jpg", "developer", true,"123",null);
         UserEntity userEntity = new UserEntity();
         when(encryptHelperMock.encryptPassword(user.getPassword())).thenReturn(user.getPassword()); // Mock encryptHelper behavior
         when(userDaoMock.findUserByUsername(user.getUsername())).thenReturn(null); // Mock userDao behavior

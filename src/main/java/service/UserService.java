@@ -36,7 +36,6 @@ public class UserService {
     TaskBean taskBean;
 
 
-
     @GET
     @Path("/dashBoardInfo")
     @Consumes (MediaType.APPLICATION_JSON)
@@ -118,8 +117,8 @@ public class UserService {
         if (!user) {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
-            long activeUsers = userBean.getActiveUsers();
-            return Response.status(200).entity(activeUsers).build();
+            List usersByDate =  userBean.getActiveUsersByDate();
+            return Response.status(200).entity(usersByDate).build();
         }
     }
 

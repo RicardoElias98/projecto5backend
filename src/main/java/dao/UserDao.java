@@ -7,8 +7,10 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class UserDao extends AbstractDao<UserEntity>{
@@ -83,6 +85,11 @@ public class UserDao extends AbstractDao<UserEntity>{
     public long countActiveUsers() {
         Query query = em.createNamedQuery("User.countActiveUsers");
         return (long) query.getSingleResult();
+    }
+
+    public List<Map.Entry<LocalDate, Long>> countActiveUsersByRegistrationDate() {
+        return em.createNamedQuery("User.countActiveUsersByRegistrationDate")
+                .getResultList();
     }
 
 }
