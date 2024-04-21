@@ -2,6 +2,7 @@ package bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -421,10 +422,19 @@ public class UserBean {
         long activeUsers = userDao.countActiveUsers();
         return activeUsers;
    }
-    public List getActiveUsersByDate () {
-        List<Map.Entry<LocalDate, Long>> list =userDao.countActiveUsersByRegistrationDate();
-        return list;
+    public List getActiveUsersByDate() {
+        List<Map.Entry<LocalDate, Long>> list = userDao.countActiveUsersByRegistrationDate();
+        List<Map.Entry<LocalDate, Long>> resultList = new ArrayList<>();
+        long runningTotal = 0;
+
+        for (Map.Entry<LocalDate, Long> entry : list) {
+            runningTotal += entry.getValue();
+            resultList.add(new AbstractMap.SimpleEntry<>(entry.getKey(), runningTotal));
+        }
+
+        return resultList;
     }
+
 
 
 

@@ -8,6 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,8 +89,17 @@ public class UserDao extends AbstractDao<UserEntity>{
     }
 
     public List<Map.Entry<LocalDate, Long>> countActiveUsersByRegistrationDate() {
-        return em.createNamedQuery("User.countActiveUsersByRegistrationDate")
+        List<Object[]> results = em.createNamedQuery("User.countActiveUsersByRegistrationDate")
                 .getResultList();
+
+        List<Map.Entry<LocalDate, Long>> resultList = new ArrayList<>();
+        for (Object[] result : results) {
+            LocalDate date = (LocalDate) result[0];
+            Long count = (Long) result[1];
+            resultList.add(new AbstractMap.SimpleEntry<>(date, count));
+        }
+
+        return resultList;
     }
 
 }
