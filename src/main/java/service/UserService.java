@@ -35,37 +35,7 @@ public class UserService {
     @Inject
     TaskBean taskBean;
 
-   /* @PUT
-    @Path("/checkNotification")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response checkNotification(@HeaderParam("token") String token) {
-        boolean user = userBean.tokenExists(token);
-        if (!user) {
-            return Response.status(403).entity("User with this token is not found").build();
-        } else {
-            User userToUsername = userBean.getUser(token);
-            String username = userToUsername.getUsername();
-            List<Notification> notificationList = userBean.getNotifications(username);
-            userBean.checkNotifications(notificationList);
-            return Response.status(200).entity("Notifications checked").build();
-        }
-    } */
 
-   /* @GET
-    @Path("/notifications")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getNotifications(@HeaderParam("token") String token) {
-        boolean user = userBean.tokenExists(token);
-        if (!user) {
-            return Response.status(403).entity("User with this token is not found").build();
-        } else {
-           User userToUsername = userBean.getUser(token);
-           String username = userToUsername.getUsername();
-            List<Notification> notificationList = userBean.getNotifications(username);
-            return Response.status(200).entity(notificationList).build();
-        }
-
-    } */
 
     @GET
     @Path("/dashBoardInfo")
@@ -139,6 +109,21 @@ public class UserService {
             return Response.status(200).entity(users).build();
         }
     }
+
+    @GET
+    @Path("/allActiveUsers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveUsers(@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            long activeUsers = userBean.getActiveUsers();
+            return Response.status(200).entity(activeUsers).build();
+        }
+    }
+
+
 
     @POST
     @Path("/register")

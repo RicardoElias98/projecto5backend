@@ -410,6 +410,10 @@ public class UserBean {
         return medTasksByUser;
    }
 
+   public long getActiveUsers () {
+        long activeUsers = userDao.countActiveUsers();
+        return activeUsers;
+   }
 
 
 

@@ -80,4 +80,9 @@ public class UserDao extends AbstractDao<UserEntity>{
         return result.doubleValue();
     }
 
+    public long countActiveUsers() {
+        Query query = em.createNamedQuery("User.countActiveUsers");
+        return (long) query.getSingleResult();
+    }
+
 }
