@@ -17,6 +17,7 @@ public class Task {
     String category;
     boolean active = true;
 
+    LocalDate realFinalDate;
 
     private static final int low = 100;
     private static final int medium = 200;
@@ -31,6 +32,16 @@ public class Task {
         this.priority = low;
         setInitialId();
         this.active = true;
+    }
+
+
+    @XmlElement
+    public LocalDate getRealFinalDate() {
+        return realFinalDate;
+    }
+
+    public void setRealFinalDate(LocalDate realFinalDate) {
+        this.realFinalDate = realFinalDate;
     }
 
     @XmlElement

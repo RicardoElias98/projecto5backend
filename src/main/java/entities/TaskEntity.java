@@ -2,6 +2,8 @@ package entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -46,6 +48,17 @@ public class TaskEntity implements Serializable {
     private CategoryEntity category;
     @Column (name="active", nullable = false, unique = false)
     private boolean active;
+
+    @Column (name="realFinalDate", nullable= true, unique = false, updatable = true)
+    private LocalDate realFinalDate;
+
+    public LocalDate getRealFinalDate() {
+        return realFinalDate;
+    }
+
+    public void setRealFinalDate(LocalDate realFinalDate) {
+        this.realFinalDate = realFinalDate;
+    }
 
     public String getId() {
         return id;

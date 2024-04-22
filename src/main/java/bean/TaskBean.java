@@ -70,6 +70,7 @@ public class TaskBean {
         taskEntity.setUser(taskDao.findTaskById(task.getId()).getUser());
         taskEntity.setActive(true);
         taskEntity.setUser(taskDao.findTaskById(task.getId()).getUser());
+        taskEntity.setRealFinalDate(task.getRealFinalDate());
         return taskEntity;
     }
     public TaskEntity createTaskEntity(dto.Task task, String username) {
@@ -131,6 +132,7 @@ public class TaskBean {
         task.setPriority(taskEntity.getPriority());
         task.setEndDate(taskEntity.getEndDate());
         task.setActive(taskEntity.isActive());
+        task.setRealFinalDate(taskEntity.getRealFinalDate());
         return task;
     }
 
@@ -260,7 +262,13 @@ public class TaskBean {
     }
     public Task changeStatus(String id, int status) {
         TaskEntity a = taskDao.findTaskById(id);
+        LocalDate currentDate = LocalDate.now();
         a.setStatus(status);
+        if (status == 30) {
+            a.setRealFinalDate(currentDate);
+        } else {
+            a.setRealFinalDate(null);
+        }
         taskDao.updateTask(a);
         Task dto = convertToDto(a);
         return dto;
