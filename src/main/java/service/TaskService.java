@@ -406,5 +406,19 @@ public class TaskService {
         }
     }
 
+    @GET
+    @Path("/taskDoneByDate")
+    @Consumes (MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response gettaskDoneByDate (@HeaderParam("token") String token) {
+        boolean user = userBean.tokenExists(token);
+        if (!user) {
+            return Response.status(403).entity("User with this token is not found").build();
+        } else {
+            List tasksListByDate = taskBean.getTasksDoneByDate();
+            return Response.status(200).entity(tasksListByDate).build();
+        }
+    }
+
 
 }

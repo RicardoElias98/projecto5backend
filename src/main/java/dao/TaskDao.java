@@ -9,8 +9,11 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
+import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class TaskDao extends AbstractDao<TaskEntity>{
@@ -158,6 +161,21 @@ public class TaskDao extends AbstractDao<TaskEntity>{
         Query query = em.createNamedQuery("Task.countTasksByCategory");
         return query.getResultList();
     }
+
+    public List<Map.Entry<LocalDate, Long>> countTasksByRealFinalDate() {
+        List<Object[]> results = em.createNamedQuery("Task.countTasksByRealFinalDate")
+                .getResultList();
+
+        List<Map.Entry<LocalDate, Long>> resultList = new ArrayList<>();
+        for (Object[] result : results) {
+            LocalDate date = (LocalDate) result[0];
+            Long count = (Long) result[1];
+            resultList.add(new AbstractMap.SimpleEntry<>(date, count));
+        }
+
+        return resultList;
+    }
+
 
 
 

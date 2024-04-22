@@ -6,8 +6,11 @@ import entities.CategoryEntity;
 import entities.TaskEntity;
 
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import dao.TaskDao;
 import dao.UserDao;
 import bean.UserBean;
@@ -354,6 +357,19 @@ public void createDefaultCategories(){
         taskEntity.setActive(true);
         taskDao.createTask(taskEntity);
     }
+}
+
+    public List getTasksDoneByDate() {
+        List<Map.Entry<LocalDate, Long>> list = taskDao.countTasksByRealFinalDate();
+        List<Map.Entry<LocalDate, Long>> resultList = new ArrayList<>();
+        long runningTotal = 0;
+
+        for (Map.Entry<LocalDate, Long> entry : list) {
+            runningTotal += entry.getValue();
+            resultList.add(new AbstractMap.SimpleEntry<>(entry.getKey(), runningTotal));
+        }
+
+        return resultList;
 }
 }
 
