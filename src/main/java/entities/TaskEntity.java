@@ -22,7 +22,8 @@ import jakarta.persistence.*;
 @NamedQuery(name="Task.countTasksByUser", query="SELECT t.user, COUNT(t) FROM TaskEntity t GROUP BY t.user")
 @NamedQuery(name="Task.countTasksByUserAndStatus", query="SELECT t.user, t.status, COUNT(t) FROM TaskEntity t GROUP BY t.user, t.status")
 @NamedQuery(name = "Task.countTasksByStatusAndActive", query = "SELECT COUNT(t) FROM TaskEntity t WHERE t.status = 30 AND t.active = true")
-@NamedQuery(name = "Task.countTasksByRealFinalDate", query = "SELECT t.realFinalDate, COUNT(t) FROM TaskEntity t WHERE t.realFinalDate IS NOT NULL GROUP BY t.realFinalDate")
+@NamedQuery(name = "Task.countTasksByRealFinalDate", query = "SELECT t.realFinalDate, COUNT(t) FROM TaskEntity t WHERE t.realFinalDate IS NOT NULL GROUP BY t.realFinalDate ORDER BY t.realFinalDate ASC"
+)
 
 
 public class TaskEntity implements Serializable {
