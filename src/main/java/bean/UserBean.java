@@ -35,7 +35,7 @@ public class UserBean {
     @EJB
     EncryptHelper EncryptHelper;
 
-    int tokenTimer = 30;
+    int tokenTimer = 300;
 
     public User addUser(User a) {
 
