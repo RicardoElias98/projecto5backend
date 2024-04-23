@@ -47,25 +47,30 @@ public class UserService {
     @Consumes (MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response dashBoardInfo (@HeaderParam("token") String token) {
-        boolean user = userBean.tokenExists(token);
-        if (!user) {
-            return Response.status(403).entity("User with this token is not found").build();
+        if (!userBean.isTokenValid(token)) {
+            userBean.logout(token);
+            return Response.status(401).entity("Invalid Token").build();
         } else {
-            ArrayList<Long> dbInfo = new ArrayList<>();
-            /* Info dos users confirmados [0] */
-            long confirmedUsers = userBean.getConfirmedUsers();
-            dbInfo.add(confirmedUsers);
-            /* Info dos users não confirmados [1]*/
-            long notConfirmedUsers = userBean.getNotConfirmedUsers();
-            dbInfo.add(notConfirmedUsers);
-            /* Info do nº de tasks por status */
-            long taskByStatus10 = taskBean.getTasksByStatus(10);
-            long taskByStatus20 = taskBean.getTasksByStatus(20);
-            long taskByStatus30 = taskBean.getTasksByStatus(30);
-            dbInfo.add(taskByStatus10); /* [2] */
-            dbInfo.add(taskByStatus20); /* [3] */
-            dbInfo.add(taskByStatus30); /* [4] */
-            return Response.status(200).entity(dbInfo).build();
+            boolean user = userBean.tokenExists(token);
+            if (!user) {
+                return Response.status(403).entity("User with this token is not found").build();
+            } else {
+                ArrayList<Long> dbInfo = new ArrayList<>();
+                /* Info dos users confirmados [0] */
+                long confirmedUsers = userBean.getConfirmedUsers();
+                dbInfo.add(confirmedUsers);
+                /* Info dos users não confirmados [1]*/
+                long notConfirmedUsers = userBean.getNotConfirmedUsers();
+                dbInfo.add(notConfirmedUsers);
+                /* Info do nº de tasks por status */
+                long taskByStatus10 = taskBean.getTasksByStatus(10);
+                long taskByStatus20 = taskBean.getTasksByStatus(20);
+                long taskByStatus30 = taskBean.getTasksByStatus(30);
+                dbInfo.add(taskByStatus10); /* [2] */
+                dbInfo.add(taskByStatus20); /* [3] */
+                dbInfo.add(taskByStatus30); /* [4] */
+                return Response.status(200).entity(dbInfo).build();
+            }
         }
     }
 

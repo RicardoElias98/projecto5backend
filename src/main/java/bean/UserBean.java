@@ -1,5 +1,6 @@
 package bean;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
@@ -17,6 +18,7 @@ import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import utilities.EncryptHelper;
+import java.time.temporal.ChronoUnit;
 
 @Singleton
 public class UserBean {
@@ -32,6 +34,8 @@ public class UserBean {
     NotificationDao notificationDao;
     @EJB
     EncryptHelper EncryptHelper;
+
+    int tokenTimer = 30;
 
     public User addUser(User a) {
 
@@ -155,6 +159,7 @@ public class UserBean {
             }
             user.setToken(token);
             userDao.updateToken(user);
+            user.setTokenExpiration(Instant.now().plus(tokenTimer,ChronoUnit.SECONDS));
             return token;
         }
         return null;
@@ -183,7 +188,14 @@ public class UserBean {
             return true;
         }
         return false;
+    }
 
+    public boolean isTokenValid (String token) {
+        UserEntity a = userDao.findUserByToken(token);
+        Instant expiration = a.getTokenExpiration();
+        if (expiration.isAfter(Instant.now())) {
+            return true;
+        } return false;
     }
 
     public boolean isUserValid(User user) {
@@ -302,6 +314,7 @@ public class UserBean {
     public void logout(String token) {
         UserEntity user = userDao.findUserByToken(token);
         user.setToken(null);
+        user.setTokenExpiration(null);
         userDao.updateToken(user);
     }
 

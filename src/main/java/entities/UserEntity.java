@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -52,6 +53,17 @@ public class UserEntity implements Serializable{
 
     @Column(name = "registrationDate", nullable = true, unique = false, updatable = true)
     LocalDate registrationDate;
+
+    @Column(name="tokenExpiration", nullable = true, unique = false, updatable = true)
+    Instant tokenExpiration;
+
+    public Instant getTokenExpiration() {
+        return tokenExpiration;
+    }
+
+    public void setTokenExpiration(Instant tokenExpiration) {
+        this.tokenExpiration = tokenExpiration;
+    }
 
     public LocalDate getRegistrationDate() {
         return registrationDate;
