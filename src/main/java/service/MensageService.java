@@ -74,6 +74,7 @@ public class MensageService {
                 Notification notification = notificationBean.createNotificationMsg(senderUsername, msg.getMessageDateTime(), receptorUsername);
                 String jsonNoti = gson.toJson(notification);
                 webSocketNotifications.toDoOnMessage(jsonNoti);
+                userBean.setTokenTimer(token);
                 return Response.status(201).entity("A new msg is created").build();
             }
         }
@@ -97,6 +98,7 @@ public class MensageService {
                 User receptorDto = userBean.getUserByUsername(receptor);
                 UserEntity receptorEntity = userBean.convertToEntity(receptorDto);
                 List<Mensage> msgs = mensageBean.getTradedMsgs(senderEntity, receptorEntity);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(msgs).build();
             }
         }
@@ -116,6 +118,7 @@ public class MensageService {
                 return Response.status(403).entity("User with this token is not found").build();
             } else {
                 mensageBean.updateChecked(msgId, checked);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("Msg is checked").build();
             }
         }

@@ -63,6 +63,7 @@ public class TaskService {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
             List<Object[]> listDes = taskBean.getListDescCate();
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(listDes).build();
         }
     } }
@@ -84,6 +85,7 @@ public class TaskService {
                     taskList.add(taskBean.convertToDto(taskEntity));
             }
             taskList.sort(Comparator.comparing(Task::getPriority, Comparator.reverseOrder()).thenComparing(Comparator.comparing(Task::getStartDate).thenComparing(Task::getEndDate)));
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(taskList).build();
         }
     } }
@@ -108,6 +110,7 @@ public class TaskService {
                 }
             }
             taskList.sort(Comparator.comparing(Task::getPriority, Comparator.reverseOrder()).thenComparing(Comparator.comparing(Task::getStartDate).thenComparing(Task::getEndDate)));
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(taskList).build();
         }
     }}
@@ -133,6 +136,7 @@ public class TaskService {
                 }
             }
             taskList.sort(Comparator.comparing(Task::getPriority, Comparator.reverseOrder()).thenComparing(Comparator.comparing(Task::getStartDate).thenComparing(Task::getEndDate)));
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(taskList).build();
         }
     } }
@@ -152,6 +156,7 @@ public class TaskService {
                 User user = userBean.getUserByUsername(username);
                 List<Task> taskList = taskBean.getTasksByCategoryAndUser(userBean.convertToEntity(user), category);
                 taskList.sort(Comparator.comparing(Task::getPriority, Comparator.reverseOrder()).thenComparing(Comparator.comparing(Task::getStartDate).thenComparing(Task::getEndDate)));
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(taskList).build();
             }
         }
@@ -174,6 +179,7 @@ public class TaskService {
                 if (!removed) {
                     return Response.status(400).entity("Failed. Tasks not removed").build();
                 } else {
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("Tasks removed").build();
                 }
             }
@@ -212,6 +218,7 @@ public class TaskService {
                 System.out.println(jsonTask);
                 webSocketTasks.toDoOnMessage(jsonTask);
                 webSocketDashBoard.toDoOnMessage("news");
+                userBean.setTokenTimer(token);
                 return Response.status(201).entity(taskBean.convertToDto(taskEntity)).build();
             }
         }
@@ -234,6 +241,7 @@ public class TaskService {
                     return Response.status(400).entity("Failed. Task not restored").build();
                 } else {
                     webSocketDashBoard.toDoOnMessage("news");
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("Task restored").build();
                 }
             }
@@ -257,8 +265,9 @@ public class TaskService {
                 if (available) {
                     return Response.status(409).entity("Name not available").build();
                 }
-                taskBean.createCategory(category.getName(), user.getUsername());
-                return Response.status(201).entity("Category created").build();
+                Category dto = taskBean.createCategory(category.getName(), user.getUsername());
+                userBean.setTokenTimer(token);
+                return Response.status(201).entity(dto).build();
             }
         }
     }
@@ -284,6 +293,7 @@ public class TaskService {
             CategoryEntity categoryEntity = taskBean.findCategoryById(category.getId());
             categoryEntity.setName(category.getName());
             if (taskBean.updateCategory(categoryEntity)) {
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("Category updated").build();
             } else {
                 return Response.status(400).entity("Failed. Category not updated").build();
@@ -311,6 +321,7 @@ public class TaskService {
                 if (!removed) {
                     return Response.status(409).entity("Failed. Category not removed. update all tasks before deleting the category").build();
                 } else {
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("Category removed").build();
                 }
             }
@@ -348,6 +359,7 @@ public class TaskService {
                 if (!updated) {
                     return Response.status(400).entity("Failed. Task not updated").build();
                 } else {
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity(taskBean.convertToDto(taskEntity)).build();
                 }
             }
@@ -377,6 +389,7 @@ public class TaskService {
                 System.out.println(jsonTask);
                 webSocketTasks.toDoOnMessage(jsonTask);
                 webSocketDashBoard.toDoOnMessage("news");
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("Status changed").build();
             }
         }
@@ -399,6 +412,7 @@ public class TaskService {
                     return Response.status(400).entity("Failed. Task not removed").build();
                 } else {
                     webSocketDashBoard.toDoOnMessage("news");
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("Task removed").build();
                 }
             }
@@ -430,6 +444,7 @@ public class TaskService {
                     System.out.println(jsonTask);
                     webSocketTasks.toDoOnMessage(jsonTask);
                     webSocketDashBoard.toDoOnMessage("news");
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("Task blocked").build();
                 }
             }
@@ -452,6 +467,7 @@ public class TaskService {
                 for (CategoryEntity categoryEntity : taskBean.getAllCategories()) {
                     categoryList.add(taskBean.convertCatToDto(categoryEntity));
                 }
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(categoryList).build();
             }
         }
@@ -470,6 +486,7 @@ public class TaskService {
                 return Response.status(401).entity("Unauthorized").build();
             } else {
                 Task task = taskBean.findTaskById(id);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(task).build();
             }
         }
@@ -488,6 +505,7 @@ public class TaskService {
                 return Response.status(401).entity("Unauthorized").build();
             } else {
                 TaskCreator creator = taskBean.findUserById(id);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(creator).build();
             }
         }
@@ -508,6 +526,7 @@ public class TaskService {
 
                 List<Task> taskList = taskBean.tasksByStatus(status);
                 taskList.sort(Comparator.comparing(Task::getPriority, Comparator.reverseOrder()).thenComparing(Comparator.comparing(Task::getStartDate).thenComparing(Task::getEndDate)));
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(taskList).build();
             }
         }
@@ -523,6 +542,7 @@ public class TaskService {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
             List tasksListByDate = taskBean.getTasksDoneByDate();
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(tasksListByDate).build();
         }
     }

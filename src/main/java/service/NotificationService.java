@@ -39,6 +39,7 @@ public class NotificationService {
                 User userdto = userBean.getUserByUsername(username);
                 UserEntity userEntity = userBean.convertToEntity(userdto);
                 List<Notification> listNotif = notificationBean.getAllNotification(userEntity);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(listNotif).build();
             }
         }
@@ -57,6 +58,7 @@ public class NotificationService {
                 return Response.status(403).entity("User with this token is not found").build();
             } else {
                 List<Notification> listNotif = notificationBean.getNotCheckedNotif(token);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(listNotif).build();
             }
         }
@@ -74,6 +76,7 @@ public class NotificationService {
                 return Response.status(403).entity("User with this token is not found").build();
             } else {
                 notificationBean.checkNotifications(token);
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("Notifications checked").build();
             }
         }

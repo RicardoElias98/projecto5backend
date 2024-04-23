@@ -69,6 +69,7 @@ public class UserService {
                 dbInfo.add(taskByStatus10); /* [2] */
                 dbInfo.add(taskByStatus20); /* [3] */
                 dbInfo.add(taskByStatus30); /* [4] */
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(dbInfo).build();
             }
         }
@@ -89,6 +90,7 @@ public class UserService {
             } else {
                 /* Info do nº médio de tasks por user */
                 double medTasksByUser = userBean.getMedTaskByUser();
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(medTasksByUser).build();
             }
         }
@@ -126,6 +128,7 @@ public class UserService {
             return Response.status(403).entity("User with this token is not found").build();
         } else {
                 List<UserEntity> users = userBean.getUsers();
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(users).build();
         }
     }}
@@ -143,6 +146,7 @@ public class UserService {
                 return Response.status(403).entity("User with this token is not found").build();
             } else {
                 List usersByDate = userBean.getActiveUsersByDate();
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(usersByDate).build();
             }
         }
@@ -210,6 +214,7 @@ public class UserService {
             }
             User user = userBean.getUserByUsername(username);
             UserDto userDto = userBean.convertUsertoUserDto(user);
+            userBean.setTokenTimer(token);
             return Response.status(200).entity(userDto).build();
         }
     }
@@ -237,6 +242,7 @@ public class UserService {
                 if (!updated) {
                     return Response.status(400).entity("Failed. User not updated").build();
                 }
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("User updated").build();
 
             } else if (userBean.getUser(token).getRole().equals("Owner") && a.getRole() != null) {
@@ -245,6 +251,7 @@ public class UserService {
                 if (!updated) {
                     return Response.status(400).entity("Failed. User not updated").build();
                 }
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("User updated").build();
             }
             return Response.status(403).entity("Forbidden").build();
@@ -270,6 +277,7 @@ public class UserService {
                 if (!updated) {
                     return Response.status(400).entity("Failed. Password not updated").build();
                 }
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity("Password updated").build();
             }
         }
@@ -327,6 +335,7 @@ public class UserService {
             } else {
 
                 if (userBean.deleteUser(token, username)) {
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("User deleted").build();
                 } else {
                     return Response.status(400).entity("User not deleted").build();
@@ -362,6 +371,7 @@ public class UserService {
                 return Response.status(405).entity("Forbidden").build();
             } else {
                 if (userBean.restoreUser(username)) {
+                    userBean.setTokenTimer(token);
                     return Response.status(200).entity("User restored").build();
                 } else {
                     return Response.status(400).entity("User not restored").build();
@@ -384,7 +394,7 @@ public class UserService {
                 return Response.status(403).entity("Forbidden").build();
             } else {
                 List<UserDto> searchResult = userBean.getUserBySearch(name);
-
+                userBean.setTokenTimer(token);
                 return Response.status(200).entity(searchResult).build();
             }
         }

@@ -187,11 +187,13 @@ public class TaskBean {
         }
         return false;
     }
-    public void createCategory(String name, String creator) {
+    public Category createCategory(String name, String creator) {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setName(name);
         categoryEntity.setCreator(creator);
+        Category dto = convertCatToDto(categoryEntity);
         taskDao.createCategory(categoryEntity);
+        return dto;
     }
     public boolean removeCategory(String name) {
         List<TaskEntity> tasks = taskDao.findAll();

@@ -165,6 +165,11 @@ public class UserBean {
         return null;
     }
 
+    public void setTokenTimer (String token) {
+        UserEntity user = userDao.findUserByToken(token);
+        user.setTokenExpiration(Instant.now().plus(tokenTimer,ChronoUnit.SECONDS));
+    }
+
     public boolean userExists(String token) {
         ;
         UserEntity a = userDao.findUserByToken(token);
