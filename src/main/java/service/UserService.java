@@ -8,6 +8,7 @@ import bean.TaskBean;
 import bean.UserBean;
 import dto.*;
 import entities.UserEntity;
+import jakarta.ejb.EJB;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -16,6 +17,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import utilities.EmailSender;
 import utilities.EncryptHelper;
+import websocket.WebSocketDashBoard;
+import websocket.WebSocketMessages;
+
+import javax.naming.NamingException;
 
 
 @Path("/user")
@@ -32,6 +37,9 @@ public class UserService {
 
     @Inject
     TaskBean taskBean;
+
+    @EJB
+    WebSocketDashBoard webSocketDashBoard;
 
 
     @GET
@@ -80,12 +88,13 @@ public class UserService {
     @PUT
     @Path("/tokenConfirmationAndChangePassword")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response tokenConfirmation(@HeaderParam("tokenConfirmation") String tokenConfirmation, @HeaderParam("password") String password, @HeaderParam("passwordConfirmation") String passwordConfirmation) {
+    public Response tokenConfirmation(@HeaderParam("tokenConfirmation") String tokenConfirmation, @HeaderParam("password") String password, @HeaderParam("passwordConfirmation") String passwordConfirmation) throws NamingException {
             if (userBean.confirmToken(tokenConfirmation)) {
                 if (!password.equals(passwordConfirmation)){
                     return Response.status(400).entity("Passwords are not the same").build();
                 } else {
                     userBean.updateFirstPass(tokenConfirmation,password);
+                    webSocketDashBoard.toDoOnMessage("news");
                     return Response.status(200).entity("User is confirmated and first password is updated").build();
                 }
             } else  {
@@ -125,7 +134,7 @@ public class UserService {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(User a) {
+    public Response addUser(User a) throws NamingException {
         boolean valid = userBean.isUserValid(a);
         if (!valid) {
             return Response.status(400).entity("All elements are required").build();
@@ -139,6 +148,7 @@ public class UserService {
             }
             User userWithConfirmationToken = userBean.addUser(a);
             emailSender.sendConfirmationEmail("testeAor@hotmail.com",userWithConfirmationToken.getConfirmationToken());
+            webSocketDashBoard.toDoOnMessage("news");
             return Response.status(201).entity("A new user is created").build();
         }
     }

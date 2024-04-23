@@ -49,12 +49,7 @@ public class EmailSender {
         }
     }
 
-    /*public static void main(String[] args) {
-        // Exemplo de uso:
-        String recipientEmail = "emaildoexemplo@outlook.com"; // Insira o e-mail do destinatário
-        String token = "tokenGerado"; // Insira o token gerado
-        sendConfirmationEmail(recipientEmail, token);
-    }*/
+
 }
 
 

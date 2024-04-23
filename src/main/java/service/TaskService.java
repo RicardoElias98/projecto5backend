@@ -31,6 +31,7 @@ import java.util.List;
 import jakarta.ws.rs.*;
 import utilities.LocalDateAdapter;
 import utilities.LocalDateTimeAdapter;
+import websocket.WebSocketDashBoard;
 import websocket.WebSocketTasks;
 
 import javax.naming.NamingException;
@@ -44,6 +45,9 @@ public class TaskService {
 
     @EJB
     WebSocketTasks webSocketTasks;
+
+    @EJB
+    WebSocketDashBoard webSocketDashBoard;
 
     @GET
     @Path("/listDesCcategory")
@@ -175,13 +179,14 @@ public class TaskService {
             String jsonTask = gson.toJson(task);
             System.out.println(jsonTask);
             webSocketTasks.toDoOnMessage(jsonTask);
+            webSocketDashBoard.toDoOnMessage("news");
             return Response.status(201).entity(taskBean.convertToDto(taskEntity)).build();
         }
     }
     @PUT
     @Path("/restore/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response restoreTask(@HeaderParam("token") String token, @PathParam("id") String id) {
+    public Response restoreTask(@HeaderParam("token") String token, @PathParam("id") String id) throws NamingException {
         boolean authorized = userBean.isUserAuthorized(token);
         if (!authorized) {
             return Response.status(401).entity("Unauthorized").build();
@@ -190,6 +195,7 @@ public class TaskService {
             if (!restored) {
                 return Response.status(400).entity("Failed. Task not restored").build();
             } else {
+                webSocketDashBoard.toDoOnMessage("news");
                 return Response.status(200).entity("Task restored").build();
             }
         }
@@ -305,6 +311,7 @@ public class TaskService {
             String jsonTask = gson.toJson(taskdto);
             System.out.println(jsonTask);
             webSocketTasks.toDoOnMessage(jsonTask);
+            webSocketDashBoard.toDoOnMessage("news");
             return Response.status(200).entity("Status changed").build();
             }
         }
@@ -312,7 +319,7 @@ public class TaskService {
     @DELETE
     @Path("/delete/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeTask(@HeaderParam("token") String token, @PathParam("id") String id) {
+    public Response removeTask(@HeaderParam("token") String token, @PathParam("id") String id) throws NamingException {
         boolean authorized = userBean.isUserAuthorized(token);
         if (!authorized) {
             return Response.status(401).entity("Unauthorized").build();
@@ -321,6 +328,7 @@ public class TaskService {
             if (!removed) {
                 return Response.status(400).entity("Failed. Task not removed").build();
             } else {
+                webSocketDashBoard.toDoOnMessage("news");
                 return Response.status(200).entity("Task removed").build();
             }
         }
@@ -346,6 +354,7 @@ public class TaskService {
                 String jsonTask = gson.toJson(blocked);
                 System.out.println(jsonTask);
                 webSocketTasks.toDoOnMessage(jsonTask);
+                webSocketDashBoard.toDoOnMessage("news");
                 return Response.status(200).entity("Task blocked").build();
             }
         }
