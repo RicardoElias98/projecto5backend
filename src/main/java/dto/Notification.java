@@ -23,6 +23,7 @@ public class Notification {
     }
 
 
+
     @XmlElement
     public UserEntity getUser() {
         return user;

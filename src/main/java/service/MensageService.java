@@ -14,11 +14,15 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import utilities.InstantAdapter;
+import utilities.LocalDateAdapter;
 import utilities.LocalDateTimeAdapter;
 import websocket.WebSocketMessages;
 import websocket.WebSocketNotifications;
 
 import javax.naming.NamingException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -71,8 +75,15 @@ public class MensageService {
                 String jsonMsg = gson.toJson(msg);
                 System.out.println(jsonMsg);
                 webSocketMessages.toDoOnMessage(jsonMsg);
+                Gson gson2 = new GsonBuilder()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                        .registerTypeAdapter(Instant.class, new InstantAdapter())
+                        .create();
                 Notification notification = notificationBean.createNotificationMsg(senderUsername, msg.getMessageDateTime(), receptorUsername);
-                String jsonNoti = gson.toJson(notification);
+                System.out.println("notification" + notification.getText() + notification.getNotificationDateTime() + notification.getId() + notification.getUser());
+                String jsonNoti = gson2.toJson(notification);
+                System.out.println("Passed");
                 webSocketNotifications.toDoOnMessage(jsonNoti);
                 userBean.setTokenTimer(token);
                 return Response.status(201).entity("A new msg is created").build();

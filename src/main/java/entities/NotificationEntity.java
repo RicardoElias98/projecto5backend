@@ -36,6 +36,7 @@ public class NotificationEntity implements Serializable {
         return id;
     }
 
+
     public UserEntity getUser() {
         return user;
     }

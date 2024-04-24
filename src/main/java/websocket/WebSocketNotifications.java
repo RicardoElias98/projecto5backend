@@ -10,11 +10,15 @@ import jakarta.ejb.Singleton;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import utilities.InstantAdapter;
+import utilities.LocalDateAdapter;
 import utilities.LocalDateTimeAdapter;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -64,6 +68,8 @@ public class WebSocketNotifications {
         userbean = (UserBean) ctx.lookup("java:module/UserBean");
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .registerTypeAdapter(Instant.class, new InstantAdapter())
                 .create();
         Notification notiAgain = gson.fromJson(notification, Notification.class);
         send(notiAgain,notification);
