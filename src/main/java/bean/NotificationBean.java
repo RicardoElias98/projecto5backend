@@ -59,7 +59,7 @@ public class NotificationBean {
         Notification notification = new Notification();
         notification.setNotificationDateTime(time);
         notification.setChecked(false);
-        notification.setText("Hey, you received a message from " + usernameSender + " on this date " + time);
+        notification.setText("Hey, you received a message from " + usernameSender + " on this date: " + time.getDayOfMonth() + "/" + time.getMonthValue() + "/" + time.getYear() + " at this time: " + time.getHour() + "h" + time.getMinute()+"m");
         UserEntity userEntity = userDao.findUserByUsername(usernameReceptor);
         notification.setUser(userEntity);
         NotificationEntity entity = convertNotificationDtoToEntity(notification);
