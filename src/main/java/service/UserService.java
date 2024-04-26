@@ -152,6 +152,33 @@ public class UserService {
         }
     }
 
+    @POST
+    @Path("/emailRecoveryPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response emailRecoveryPassword (@HeaderParam("email") String email) {
+       String username =  userBean.usernameByEmail(email);
+       User user = userBean.getUserByUsername(username);
+        System.out.println(user.getUsername() + user.getConfirmationToken() + user.getEmail());
+        emailSender.sendRecoveryPassword("testeAor@hotmail.com",user.getConfirmationToken());
+        return Response.status(200).entity("Email sended").build();
+    }
+
+    @PUT
+    @Path("/recoveryPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response recoveryPassord (@HeaderParam("confirmationToken") String confirmationToken, @HeaderParam("password") String password, @HeaderParam("confirmPassword") String confirmPassword) {
+        if (userBean.confirmToken(confirmationToken)) {
+            if (password.equals(confirmPassword)) {
+                if (!userBean.recoveryPassword(confirmationToken, password)) {
+                    return Response.status(401).entity("Invalid information").build();
+                } else {
+                    return Response.status(200).entity("Password is updated").build();
+                }
+            } else {return Response.status(400).entity("Passwords are not the same").build();}
+        }  else {
+            return Response.status(403).entity("Forbidden").build();
+        }
+    }
 
 
     @POST

@@ -187,6 +187,19 @@ public class UserBean {
         return false;
     }
 
+    public String usernameByEmail (String email) {
+        String username = userDao.findUsernameByEmail(email);
+        return username;
+    }
+    public boolean recoveryPassword (String confirmationToken, String password) {
+        UserEntity userEntity = userDao.findUserByConfirmationToken(confirmationToken);
+        if (userEntity!= null) {
+            String pass = EncryptHelper.encryptPassword(password);
+            userEntity.setPassword(pass);
+            return true;
+        } else return false;
+    }
+
     public boolean isUserAuthorized(String token) {
         UserEntity a = userDao.findUserByToken(token);
         if (a != null) {
@@ -272,6 +285,7 @@ public class UserBean {
         user.setActive(userEntity.isActive());
         user.setConfirmed(userEntity.isConfirmed());
         user.setRegistrationDate(userEntity.getRegistrationDate());
+        user.setConfirmationToken(userEntity.getConfirmationToken());
         return user;
     }
 

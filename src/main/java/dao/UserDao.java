@@ -102,4 +102,14 @@ public class UserDao extends AbstractDao<UserEntity>{
         return resultList;
     }
 
+    public String findUsernameByEmail(String email) {
+        try {
+            return em.createNamedQuery("User.findUsernameByEmail", String.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }
