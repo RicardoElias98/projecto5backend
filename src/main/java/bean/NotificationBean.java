@@ -41,6 +41,7 @@ public class NotificationBean {
         dto.setText(entity.getText());
         dto.setChecked(entity.isChecked());
         dto.setNotificationDateTime(entity.getNotificationDateTime());
+        dto.setId(entity.getId());
         return dto;
     }
 
