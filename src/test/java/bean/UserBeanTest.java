@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import utilities.EncryptHelper;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -162,4 +163,20 @@ class UserBeanTest {
         assertNotNull(result);
         assertEquals(2, result.size());
     }
+
+    @Test
+    public void testIsTokenValid_ExpiredToken() {
+        String expiredToken = "expired_token";
+
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setTokenExpiration(Instant.now().minusSeconds(3600));
+
+
+        when(userDaoMock.findUserByToken(expiredToken)).thenReturn(userEntity);
+
+        assertFalse(userBean.isTokenValid(expiredToken));
+    }
+
+
 }
