@@ -46,8 +46,6 @@ public class UserService {
     @EJB
     WebSocketDashBoard webSocketDashBoard;
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(UserBean.class);
-
 
     @GET
     @Path("/dashBoardInfo")

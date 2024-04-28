@@ -1,5 +1,6 @@
 package service;
 
+import bean.LogBean;
 import bean.TaskBean;
 import bean.UserBean;
 import com.google.gson.Gson;
@@ -42,6 +43,9 @@ public class TaskService {
     TaskBean taskBean;
     @Inject
     UserBean userBean;
+
+    @Inject
+    LogBean logBean;
 
     @EJB
     WebSocketTasks webSocketTasks;
@@ -218,6 +222,7 @@ public class TaskService {
                 System.out.println(jsonTask);
                 webSocketTasks.toDoOnMessage(jsonTask);
                 webSocketDashBoard.toDoOnMessage("news");
+                logBean.logUserInfo(token,"Task added with this id: " + taskEntity.getId(), 1);
                 userBean.setTokenTimer(token);
                 return Response.status(201).entity(taskBean.convertToDto(taskEntity)).build();
             }
