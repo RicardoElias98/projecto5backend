@@ -191,6 +191,7 @@ public class UserService {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(User a) throws NamingException {
         boolean valid = userBean.isUserValid(a);
         if (!valid) {
@@ -206,7 +207,7 @@ public class UserService {
             User userWithConfirmationToken = userBean.addUser(a);
             emailSender.sendConfirmationEmail("testeAor@hotmail.com",userWithConfirmationToken.getConfirmationToken());
             webSocketDashBoard.toDoOnMessage("news");
-            return Response.status(201).entity("A new user is created").build();
+            return Response.status(201).entity(userWithConfirmationToken).build();
         }
     }
 
@@ -277,6 +278,7 @@ public class UserService {
                     return Response.status(400).entity("Failed. User not updated").build();
                 }
                 userBean.setTokenTimer(token);
+                logBean.logUserInfo(token,"User updted to: " + a.getName() + " " + a.getEmail() + " " +  a.getUserPhoto() + " " +  a.getRole() + " " +  a.getContactNumber(),1 );
                 return Response.status(200).entity("User updated").build();
 
             } else if (userBean.getUser(token).getRole().equals("Owner") && a.getRole() != null) {
@@ -286,6 +288,7 @@ public class UserService {
                     return Response.status(400).entity("Failed. User not updated").build();
                 }
                 userBean.setTokenTimer(token);
+                logBean.logUserInfo(token,"User updted to: " + a.getName() + " " + a.getEmail() + " " +  a.getUserPhoto() + " " +  a.getRole() + " " +  a.getContactNumber(),1 );
                 return Response.status(200).entity("User updated").build();
             }
             return Response.status(403).entity("Forbidden").build();
@@ -368,9 +371,9 @@ public class UserService {
             if (!authorized) {
                 return Response.status(403).entity("Forbidden").build();
             } else {
-
                 if (userBean.deleteUser(token, username)) {
                     userBean.setTokenTimer(token);
+                   //logBean.logUserInfo(token,"User deleted: " + username,1 );
                     return Response.status(200).entity("User deleted").build();
                 } else {
                     return Response.status(400).entity("User not deleted").build();
