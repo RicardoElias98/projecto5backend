@@ -246,6 +246,7 @@ public class TaskService {
                     return Response.status(400).entity("Failed. Task not restored").build();
                 } else {
                     webSocketDashBoard.toDoOnMessage("news");
+                    logBean.logUserInfo(token,"Restore task with this id: " + id,1);
                     userBean.setTokenTimer(token);
                     return Response.status(200).entity("Task restored").build();
                 }
@@ -364,6 +365,7 @@ public class TaskService {
                 if (!updated) {
                     return Response.status(400).entity("Failed. Task not updated").build();
                 } else {
+                    logBean.logUserInfo(token,"Task updated: " + task.getId(),1);
                     userBean.setTokenTimer(token);
                     return Response.status(200).entity(taskBean.convertToDto(taskEntity)).build();
                 }
@@ -394,6 +396,7 @@ public class TaskService {
                 System.out.println(jsonTask);
                 webSocketTasks.toDoOnMessage(jsonTask);
                 webSocketDashBoard.toDoOnMessage("news");
+                logBean.logUserInfo(token, "Tasks moved to " + status,1);
                 userBean.setTokenTimer(token);
                 return Response.status(200).entity("Status changed").build();
             }
