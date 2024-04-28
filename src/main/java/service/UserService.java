@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import bean.LogBean;
 import bean.TaskBean;
 import bean.UserBean;
 import dto.*;
@@ -21,6 +22,7 @@ import websocket.WebSocketDashBoard;
 import websocket.WebSocketMessages;
 
 import javax.naming.NamingException;
+import org.apache.logging.log4j.LogManager;
 
 
 @Path("/user")
@@ -33,6 +35,9 @@ public class UserService {
     EncryptHelper encryptHelper;
 
     @Inject
+    LogBean logBean;
+
+    @Inject
     EmailSender emailSender;
 
     @Inject
@@ -40,6 +45,8 @@ public class UserService {
 
     @EJB
     WebSocketDashBoard webSocketDashBoard;
+
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(UserBean.class);
 
 
     @GET
@@ -330,6 +337,7 @@ public class UserService {
             if (token == null) {
                 return Response.status(404).entity("User with this username and password is not found").build();
             } else {
+                logBean.logUserInfo(token,"User logged with username: " + username,1 );
                 return Response.status(200).entity(token).build();
             }
         }
